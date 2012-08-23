@@ -1,0 +1,253 @@
+{if $m_action=="add"}
+{$form_html}
+<p><b>Примечание:</b> Вы можете использовать специальные значения:</p>
+<p><b>%NUMBER%</b> - номер заказа</p>
+<p><b>%FIO%</b> - ФИО заказчика (сработает только если в форме есть элемент управления с типом ФИО)</p>
+<p><b>%DATA%</b> - данные , которые были введены в форму</p>
+{elseif $m_action=="forward_order"}
+<h2>История переписки</h2>
+<div class="answers">
+	<div class="answer_box_user">
+		<div class="answer_from padding">
+			{if $order.fio}{$order.fio}{/if} {if $order.email}(<a href="mailto:{$order.email}">{$order.email}</a>){/if} писал {$order.create_print}:
+		</div>
+		<div class="answer_content">{$order.content}</div>
+		<div class="answer_from">IP записан: {$order.ip}</div>
+	</div>
+	{if $answers}
+	{foreach key=key item=answer from=$answers}
+		{if $answer.is_admin==1}
+	<div class="answer_box_me">
+		<div class="answer_from padding">
+			<b>Администратор</b> писал {$answer.create_print}:
+		</div>
+		<div class="answer_content">{$answer.forwardtext}</div>
+		<div class="answer_from">IP записан: {$answer.ip}</div>
+	</div>		
+		{else}
+	<div class="answer_box_user">
+		<div class="answer_from padding">
+			{if $order.fio}{$order.fio}{/if} {if $order.email}(<a href="mailto:{$order.email}">{$order.email}</a>){/if} писал {$answer.create_print}:
+		</div>
+		<div class="answer_content">{$answer.forwardtext}</div>
+		<div class="answer_from">IP записан: {$answer.ip}</div>
+	</div>		
+		{/if}
+	{/foreach}
+	{/if}
+</div>
+<div class="answer_form">
+<h2>Отправить ответ</h2>
+{if $save}
+<script>
+parent.tooltip('Ответ отправлен','Ответ на заявку успешно отправлен',3000);
+parent.show_close_dialog=false;
+parent.$.fancybox.close();
+</script>
+<h2>Ответ на заявку был успешно отправлен</h2>
+{/if}
+{$form_html}
+</div>
+{elseif $m_action=="addinput"}
+{$form_html}
+{elseif $m_action=="read_orders"}
+{if $orders}
+{foreach key=key item=order from=$orders}
+<h1>Заявка # {$order.order_number}</h1>
+{$order.content}
+<p style="padding-top:5px;padding-bottom:5px"><hr></p>
+{/foreach}
+{else}
+<p>Непрочитанных заявок не найдено</p>
+{/if}
+{elseif $m_action=="view_order"}
+<h1>Заявка # {$order.order_number}</h1>
+{$order.content}
+<p align="center"><input type="button" class="bigbutton" value="Распечатать заявку" onclick="javascript:print();"></p>
+{elseif $m_action=="view_orders"}
+{if $orders}
+<table class="objects" id="value_list">
+<tr height="30">
+	<td width="20%" class="objects_header">Заявка</td>
+	<td width="20%" class="objects_header">ФИО</td>
+	<td width="20%" class="objects_header">E-mail</td>		
+	<td width="25%" class="objects_header">Получена</td>
+	<td width="5%" class="objects_header">Ответить</td>
+	<td width="10%" class="objects_header" align="right">Операции</td>
+</tr>
+{assign var="k" value=1}
+{foreach key=key item=order from=$orders}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="order{$order.id_order}">
+	<td>{if $order.unread}<b>{/if}Заявка #{$order.order_number}{if $order.unread}</b>{/if}</td>
+	<td>{if $order.fio}{$order.fio}{else}не указано{/if}</td>
+	<td>{if $order.email}<a href="mailto:{$order.email}">{$order.email}</a>{else}не указано{/if}</td>
+	<td>{$order.create_print}</td>
+	<td align="center"><a href="{$siteurl}admin/?module=modules&module_name=forms&m_action=forward_order&ajax=true&modAction=settings&id_order={$order.id_order}"  class="dialog" title="Ответить на заявку  #{$order.order_number}"><img src="{$img}admin/icons/forward{if $order.unread==0}_off{/if}.png"></a></td>
+	<td class="actions" align="right">
+		<ul>
+			<li><a href="{$siteurl}admin/?module=modules&module_name=forms&m_action=view_order&ajax=true&modAction=settings&id_order={$order.id_order}"  class="dialog" title="Просмотреть заявку #{$order.order_number}"><img src="{$img}admin/icons/edit.gif"></a></li>
+		</ul>	
+	</td>
+</tr>
+{assign var="k" value=$k+1}
+{/foreach}
+</table>
+<p>Выберите страницу: 
+{foreach key=key item=p from=$pages}
+{if $p==$pg}
+<b>{$p+1}</b>&nbsp;
+{else}
+<a href="{$siteurl}admin/?module=modules&module_name=forms&m_action=view_orders&modAction=settings&id_form={$id_form}&p={$p}">{$p+1}</a>&nbsp;
+{/if}
+{/foreach}
+</p>
+{else}
+<b>Заявки по данной форме еще не поступали</b>
+{/if}
+{elseif $m_action=="set_value"}
+<div id="values">
+<h1>Добавление нового значения</h1>
+{if $added}
+<script>
+	parent.tooltip('','Значение добавлено!',3000);
+</script>
+{/if}
+<form id="frm" action="{$siteurl}admin/?module=modules&module_name=forms&m_action=set_value&modAction=settings&id_input={$input.id_input}&ajax=yes&add_value=yes" method="post">
+<p>Введите значение:<br>
+<input type="text" name="caption" value="" size="40"></p>
+<p><input name="default" type="checkbox">Использовать по умолчанию</p>
+<p><input type="submit" value="Добавить" class="button"></p>
+</p>
+</form>
+{if $changed}
+<script>
+	parent.tooltip('','Значения обновлены!',3000);
+</script>
+{/if}
+<h1 style="padding-bottom:10px;">Значения для элемента {$input.caption}:</h1>
+{if $values}
+<form id="frm2" action="{$siteurl}admin/?module=modules&module_name=forms&m_action=set_value&modAction=settings&id_input={$input.id_input}&ajax=yes&save_value=yes" method="post">
+<table class="objects" id="value_list">
+<tr height="30">
+	<td width="30%" class="objects_header">Значение</td>
+	<td width="7%" class="objects_header">По умолчанию</td>
+	<td width="5%" class="objects_header" align="right">Удалить</td>
+</tr>
+{foreach key=key item=value from=$values}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="value{$value.id_value}">
+	<td valign="top" style="background:#e5e5e5;padding:10px;"><input type="text" class="textbox" name="value_caption[{$value.id_value}]" value="{$value.caption}" style="width:90%;"></td>
+	<td style="background:#e5e5e5;padding:10px;" align="center">{if $value.default}<input type="radio" name="default_value" value="{$value.id_value}" checked>{else}<input type="radio" name="default_value" value="{$value.id_value}">{/if}</td>
+	<td align="center" valign="middle" style="background:#ededed;padding:10px;"><input type="checkbox" name="delete[{$value.id_value}]"></td>
+<input type="hidden" name="idval[{$value.id_value}]" value="{$value.id_value}">
+{/foreach}
+<tr>
+	<td colspan="3" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+</tr>
+</table>
+</form>
+{else}
+<p>Ни одного значения пока не создано</p>
+{/if}
+</div>
+{elseif $m_action=="view_form"}
+<div class="body">					
+<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=forms&modAction=settings');"><< назад к списку форм</div>
+<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=forms&m_action=addinput&mode=add&modAction=settings&id_form={$form.id_form}');">создать элемент управления</div>
+</div>
+<h2>Просмотр элементов управления формы {$form.caption}:</h2>
+{if $inputs}
+<table class="objects" id="inputs">
+<tr height="30">
+	<td width="35%" class="objects_header">Название</td>
+	<td width="15%" class="objects_header">Тип элемента</td>
+	<td width="10%" class="objects_header">Тип данных</td>
+	<td width="10%" class="objects_header">Обязательное</td>
+	<td width="10%" class="objects_header" align="right">Сортировка</td>
+	<td width="10%" class="objects_header" align="right">Операции</td>
+</tr>
+{assign var="k" value=0}
+{foreach key=key item=input from=$inputs}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="input{$input.id_input}">
+	<td>{$input.caption}</td>
+	<td>{$input.type_caption}</td>
+	<td>{$input.data_caption}</td>
+	<td align="center">{if $input.obyaz}<b>да</b>{else}нет{/if}</td>
+	<td class="actions">
+		<ul>
+		{if $k<$inputs_count-1}
+			<li><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=forms&m_action=view_form&id_form={$form.id_form}&id_input={$input.id_input}&sort_up=yes" title="Переместить элемент {$input.caption} вниз"><img src="{$img}admin/icons/arrow_down.gif"></a></li>
+		{else}
+			<li><img src="{$img}admin/blank.gif" width="16"></li>		
+		{/if}
+		{if $k>0}
+			<li><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=forms&m_action=view_form&id_form={$form.id_form}&id_input={$input.id_input}&sort_down=yes" title="Переместить элемент {$input.caption} вверх"><img src="{$img}admin/icons/arrow_top.gif"></a></li>
+			{else}
+			<li><img src="{$img}admin/blank.gif" width="16"></li>
+		{/if}		
+		{assign var="k" value=$k+1}
+		</ul>	
+	</td>
+	<td class="actions" align="left">
+		<ul>
+			<li><a href="{$siteurl}admin/?module=modules&module_name=forms&m_action=addinput&mode=edit&modAction=settings&id_form={$form.id_form}&id_input={$input.id_input}" title="Редактировать элемент {$input.caption}"><img src="{$img}admin/icons/edit.gif"></a></li>
+			<li><a href="javascript:void(0);" title="Удалить элемент {$input.caption}?" onclick="YesNo('Удалить элемент {$input.caption}?','{$siteurl}admin/?module=modules&module_name=forms&m_action=delete_input&modAction=settings&id_form={$form.id_form}&id_input={$input.id_input}');"><img src="{$img}admin/icons/delete.gif"></a></li>
+			{if $input.input_type==5 || $input.input_type==6}
+			<li><a href="{$siteurl}admin/?module=modules&module_name=forms&m_action=set_value&modAction=settings&id_input={$input.id_input}&ajax=yes" title="Просмотреть значения элемента управления {$input.caption}" class="dialog"><img src="{$img}admin/icons/cube_blue.gif"></a></li>			
+			{/if}
+		</ul>
+	</td>
+</tr>
+{/foreach}
+</table>
+{else}
+Ни одного элемента управления создано не было.
+{/if}
+{else}
+<div class="body">					
+<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=forms&m_action=add&mode=add&modAction=settings');">создать форму</div>
+</div>
+<div class="body">
+{if $forms}
+<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=forms&m_action=save" method="post" id="forms_form">
+<table class="objects" id="forms">
+<tr height="30">
+	<td width="25%" class="objects_header editable_header"><span>Название</span></td>
+	<td width="20%" class="objects_header">Показывать в разделе</td>	
+	<td width="5%" class="objects_header">Новые заявки</td>
+	<td width="20%" class="objects_header editable_header"><span>E-mail</span></td>
+	<td width="10%" class="objects_header editable_header"><span>Видимость</span></td>
+	<td width="20%" class="objects_header" align="right">Операции</td>
+</tr>
+{foreach key=key item=form from=$forms}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="form{$form.id_form}">
+	<td class="editable"><span>{$form.caption_admin}</span><input type="text" name="capt[{$form.id_form}]" value="{$form.caption_admin}" class="nonvisible"></td>
+	<td>{$form.category_caption}</td>
+	<td align="center" nowrap>{if $form.unread>0}<a href="{$siteurl}admin/?module=modules&module_name=forms&m_action=read_orders&modAction=settings&id_form={$form.id_form}&ajax=true" class="dialog unread">{$form.unread}</a>{else}0{/if}</td>
+	<td class="editable"><span><a href="mailto:{$form.email}">{$form.email}</a></span><input type="text" name="email[{$form.id_form}]" value="{$form.email}" class="nonvisible"></td>
+	<td align="center"><input type="checkbox" name="vis[{$form.id_form}]" {if $form.visible}checked{/if} class="checkbox" numb="0"></td>
+	<td class="actions" align="right">
+		<ul>
+			<li><a href="{$siteurl}admin/?module=modules&module_name=forms&m_action=add&mode=edit&modAction=settings&id_form={$form.id_form}" title="Редактировать форму {$form.caption_admin}"><img src="{$img}admin/icons/edit.gif" border="0"></a></li>
+			<li><a href="javascript:void(0);" onclick="YesNo('Удалить форму?','{$siteurl}admin/?module=modules&module_name=forms&m_action=delete&modAction=settings&id_form={$form.id_form}');" title="Удалить форму {$form.caption_admin}"><img src="{$img}admin/icons/delete.gif" border="0"></a></li>
+			<li><a href="{$siteurl}admin/?module=modules&module_name=forms&m_action=view_form&modAction=settings&id_form={$form.id_form}" title="Просмотреть поля формы {$form.caption_admin}"><img src="{$img}admin/icons/cube_blue.gif" border="0"></a></li>		
+			<li><a href="{$siteurl}admin/?module=modules&module_name=forms&m_action=view_orders&modAction=settings&id_form={$form.id_form}" title="Полученные заявки по форме {$form.caption_admin}"><img src="{$img}admin/icons/forms/orders.png" width="16" height="16" border="0"></a></li>	
+		</ul>
+	</td>
+</tr>
+<input type="hidden" name="idform[{$form.id_form}]" value="{$form.id_form}">
+{/foreach}
+<tr>
+	<td colspan="4"></td>
+	<td class="selectall" align="center"><input type="checkbox" numb="0"></td>
+	<td></td>
+</tr>
+<tr id="save_submit">
+	<td colspan="6" align="center"><input type="submit" value="Сохранить" class="button"></td>
+</tr>
+</table>
+</form>
+{else}
+Ни одной формы создано не было
+{/if}
+</div>
+{/if}

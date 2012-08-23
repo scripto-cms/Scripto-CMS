@@ -1,0 +1,315 @@
+{if $m_action=="users"}
+<div class="body">					
+<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=users&m_action=register&mode=add&modAction=settings');">Регистрация пользователя</div>
+{if $basket_install}<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=users&m_action=groups&modAction=settings');">Группы пользователей</div>{/if}
+				<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=users" method="post" id="search_form">
+				<div id="searchbox"><table><tr><td width="90%"><input type="text" name="str" value="{$str}" class="sbox"></td><td><input type="image" src="{$siteurl}images/admin/s_icon.jpg"></td></tr></table></div>
+				<div id="additionalbox"><table><tr><td><select name="stype"><option value="0"{if $stype==0} selected{/if}>Все пользователи</option><option value="1"{if $stype==1} selected{/if}>Только новые пользователи</option><option value="2"{if $stype==2} selected{/if}>Модераторы</option></select></td></tr></table></div>				
+				<input type="hidden" name="m_action" value="users">
+				</form>
+</div>
+<div class="body">
+{if $users}
+<p align="right">
+Выберите страницу:
+{foreach key=key item=p from=$pages}
+	{if $p==$pagenumber}
+		<b>{$p+1}</b>
+	{else}
+		<a href="{$siteurl}admin/?module=modules&module_name=users&modAction=settings&p={$p}{if $str_url!=''}&str={$str_url}{/if}&stype={$stype}">{$p+1}</a>
+	{/if}
+	&nbsp;
+{/foreach}
+</p>
+{if $password}
+<div class="body">
+<h2>Важная информация</h2>
+<div class="attention">Пожалуйста запишите пароль для входа пользователя <b>{$cuser.login}</b> : <b>{$password}</b></div>
+</div>
+{/if}
+<div class="body">
+<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=users" method="post" id="users_form">
+<table class="objects" id="users">
+<tr height="30">
+	<td width="25%" class="objects_header">Логин</td>
+	<td width="40%" class="objects_header editable_header"><span>ФИО</span></td>	
+	<td width="5%" class="objects_header editable_header"><span>Новый</span></td>
+	<td width="20%" class="objects_header editable_header"><span>E-mail</span></td>
+	<td width="10%" class="objects_header" align="right">Операции</td>
+</tr>
+{foreach key=key item=usr from=$users}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="user{$usr.id_user}">
+	<td>{if $usr.new}<b>{$usr.login}</b>{else}{if $usr.moderator}<font style="color:red;">{$usr.login}</font>{else}{$usr.login}{/if}{/if}</td>
+	<td class="editable"><span>{$usr.fio}</span><input type="text" name="family[{$usr.id_user}]" value="{$usr.family}" style="width:30%" class="nonvisible">&nbsp;<input type="text" name="name[{$usr.id_user}]" value="{$usr.name}" style="width:30%" class="nonvisible">&nbsp;<input type="text" name="otch[{$usr.id_user}]" value="{$usr.otch}" style="width:30%" class="nonvisible"></td>
+	<td align="center"><input type="checkbox" name="new[{$usr.id_user}]" {if $usr.new} checked{/if} class="checkbox" numb="0"></td>
+	<td class="editable"><span><a href="mailto:{$usr.email}">{$usr.email}</a></span><input type="text" name="email[{$usr.id_user}]" value="{$usr.email}" class="nonvisible"></td>
+	<td class="actions" align="right">
+		<ul>
+			<li><a href="{$siteurl}admin/?module=modules&module_name=users&modAction=settings&m_action=register&mode=edit&id_user={$usr.id_user}" title="Редактировать пользователя {$usr.login}"><img src="{$img}admin/icons/edit.gif" border="0"></a></li>
+			<li><a href="javascript:void(0);" onclick="YesNo('Удалить пользователя {$usr.login}?','{$siteurl}admin/?module=modules&module_name=users&m_action=delete&modAction=settings&id_user={$usr.id_user}');" title="Удалить пользователя {$usr.login}"><img src="{$img}admin/icons/delete.gif" border="0"></a></li>
+			{if $usr.moderator}
+			<li><a href="{$siteurl}admin/?module=modules&module_name=users&modAction=settings&m_action=permissions&id_user={$usr.id_user}&ajax=yes" class="dialog" title="Права доступа пользователя {$usr.login}"><img src="{$img}admin/icons/access.png" border="0"></a></li>
+			{/if}
+			{if $objects_install}
+			<li><a href="{$siteurl}admin/?module=modules&module_name=users&modAction=settings&m_action=objects&id_user={$usr.id_user}" title="Выбрать объекты для пользователя {$usr.login}"><img src="{$img}admin/icons/objects.png" border="0"></a></li>											
+			{/if}
+		</ul>
+	</td>		
+</tr>
+<input type="hidden" name="iduser[{$usr.id_user}]" value="{$usr.id_user}">
+{/foreach}
+					<input type="hidden" name="p" value="{$pagenumber}">
+					{if $str!=''}
+					<input type="hidden" name="str" value="{$str}">
+					{/if}
+					<input type="hidden" name="stype" value="{$stype}">
+					<input type="hidden" name="m_action" value="save">
+<tr>
+	<td colspan="2"></td>
+	<td class="selectall" align="center"><input type="checkbox" numb="0"></td>
+	<td colspan="2"></td>
+</tr>
+<tr id="save_submit">
+	<td colspan="5" align="center"><input type="submit" value="Сохранить" class="button"></td>
+</tr>
+</table>
+</form>
+</div>
+{else}
+{if $str || $stype>0}
+<p>Пользователи с заданными параметрами не найдены</p>
+{else}
+<p>У Вас не зарегистрировалось ни одного пользователя</p>
+{/if}
+{/if}
+{elseif $m_action=="groups"}
+<div class="body">
+	<h2>Добавить группу пользователей</h2>
+	<form action="" method="post">
+	<table width="400">
+		<tr>
+			<td width="30%">Название группы:</td>
+			<td width="50%"><input type="text" name="groupname" value="" class="textbox"></td>
+			<td width="20%" class="bigbutton"><input type="submit" value="добавить"></td>
+		</tr>
+	</table>
+	<input type="hidden" name="addnew" value="1">
+	</form>
+	<h2>Группы пользователей</h2>
+	{if $groups}
+	<p>Вы можете установить размер скидки при покупках в интернет магазине для каждой из групп пользователей. Чтобы скидка считалась у Вас должен быть установлен модуль Интернет магазин.</p>
+	<form action="" method="post" id="groups_form">
+	<table class="objects">
+	<tr>
+		<td class="objects_header editable_header" width="50%"><span>Название группы</span></td>
+		<td class="objects_header editable_header" width="15%"><span>Скидка</span></td>
+		<td class="objects_header" width="15%">Удалить</td>
+		<td class="objects_header" width="20%" align="right">Действия</td>
+	</tr>
+	{foreach key=key item=group from=$groups}
+	<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="group{$group.id_group}">
+		<td class="editable"><span>{$group.caption}</span><input type="text" name="caption[{$group.id_group}]" class="nonvisible" value="{$group.caption}"></td>
+		<td class="editable"><span>{$group.percent}%</span><input type="text" name="percent[{$group.id_group}]" class="nonvisible" class="textbox" value="{$group.percent}" maxlength="2" size="2"></td>
+		<td align="center"><input type="checkbox" name="del[{$group.id_group}]" class="deletecheckbox" numb="0"></td>
+		<td class="actions">
+			<ul>
+				<li><a href="{$siteurl}admin/?module=modules&module_name=users&modAction=settings&m_action=group_users&id_group={$group.id_group}&ajax=yes" class="editor" title="Пользователи группы {$group.caption}"><img src="{$img}admin/icons/users.png" border="0" alt="Пользователи группы {$group.caption}"></a></li>
+			</ul>
+		</td>
+	</tr>
+	{/foreach}
+	<tr>
+		<td></td>
+		<td></td>
+		<td class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+		<td></td>
+	</tr>	
+	<tr id="save_submit">
+		<td colspan="4" align="center"><input type="submit" value="Сохранить" class="button"></td>
+	</tr>
+	</table>
+	<input type="hidden" name="save" value="1">
+	</form>	
+	{else}
+	<p>Вы еще не создали ни одной группы пользователей.</p>
+	{/if}
+</div>
+{elseif $m_action=="group_users"}
+	<h2>Пользователи группы {$group.caption}</h2>
+	{if $saved}
+		<script>
+			parent.tooltip('','Пользователи успешно добавлены в группу {$group.caption}!',3000);	
+			{literal}		
+			parent.show_close_dialog=false;
+			parent.$.fancybox.close();
+			{/literal}		
+		</script>
+	{/if}	
+	<form action="" method="post">
+	<table class="objects" id="users">
+	<tr height="30">
+		<td width="80%" class="objects_header">Пользователь</td>
+		<td width="20%" class="objects_header editable_header"><span>Добавить в группу</span></td>	
+	</tr>	
+	{foreach key=key item=usr from=$users}
+	<tr class="{cycle values="objects_cell_light,objects_cell_bold"}">
+		<td>{$usr.fio} [<b>{$usr.login}</b>]</td>
+		<td align="center"><input type="checkbox" numb="0" name="add[{$usr.id_user}]"{if $usr.id_group==$group.id_group} checked{/if}></td>
+	</tr>		
+	{/foreach}
+	<tr><td colspan="2" align="center"><input type="submit" value="сохранить"></td></tr>
+	</table>
+	<input type="hidden" name="save" value="1">
+	</form>	
+{elseif $m_action=="permissions"}
+	{if $user.type=='root'}
+	<h2>Установка прав доступа для пользователя {$usr.fio}</h2>
+	{if $saved}
+		<script>
+			parent.tooltip('','Данные доступа успешно сохранены!',3000);
+		</script>
+	{/if}
+	<form action="" method="post">
+	<table class="objects" id="users">
+	<tr height="30">
+		<td width="80%" class="objects_header">Модуль</td>
+		<td width="20%" class="objects_header editable_header"><span>Разрешить доступ</span></td>	
+	</tr>
+	<tr><td colspan="2" align="center"><b>Стандартные функции</b></td></tr>
+	{foreach key=key item=mod from=$mods.standart}
+	<tr class="{cycle values="objects_cell_light,objects_cell_bold"}">
+		<td>{$mod}</td>
+		<td align="center"><input type="checkbox" name="standart[{$key}]"{if $usr.permissions.standart[$key]==true} checked{/if}></td>
+	</tr>
+	{/foreach}
+	<tr><td colspan="2" align="center"><b>Установленные модули</b></td></tr>	
+	{foreach key=key item=mod from=$mods.additional}
+	<tr class="{cycle values="objects_cell_light,objects_cell_bold"}">
+		<td>{$mod}</td>
+		<td align="center"><input type="checkbox" name="additional[{$key}]"{if $usr.permissions.additional[$key]==true} checked{/if}></td>
+	</tr>
+	{/foreach}
+	<tr><td colspan="2" align="center"><input type="submit" value="сохранить"></td></tr>
+	</table>
+	<input type="hidden" name="save" value="yes">
+	</form>
+	{else}
+	<h2>Ошибка</h2>
+	<p>Вам запрещено изменять уровень доступа модераторов.</p>
+	{/if}
+{else}
+{if $m_action=="register"}
+{$form_html}
+{/if}
+{if $m_action=="dialogobject"}
+{if !$get_rubrics}
+	{include file="admin/usermodules/users/previewlist.tpl.html"}
+{else}
+{if $multiple=="no"}
+<input type="hidden" id="multiple" value="{$multiple}">
+{/if}
+<table class="moduletable">
+	<tr>
+	<td>
+	<table class="moduletable">
+	<tr>
+		<td class="module_left">
+			<div class="image_list">
+			{include file="admin/usermodules/users/menu.tpl.html"}
+			</div>
+		</td>
+		<td class="module_right">
+			<div class="image_list">
+				<div class="body" id="changepreviewlist">
+					{include file="admin/usermodules/users/previewlist.tpl.html"}
+				</div>
+			</div>
+		</td>
+	</tr>
+	</table>
+	</td>
+	</tr>
+</table>
+<div class="image_buttons">
+	<table width="100%">
+		<tr>
+			<td width="50%" align="left"><input type="button" value="удалить текущий объект" id="deleteImage"></td>
+			<td width="50%" align="right"><input type="button" value="выбрать объект" id="selectImage"></td>
+		</tr>
+	</table>
+	<input type="hidden" id="type" value="object">
+	<input type="hidden" id="mode" value="{$mode}">
+	<input type="hidden" id="ref" value="{$ref}">
+	<input type="hidden" id="mode" value="{$object.id_object}">	
+</div>
+{/if}	
+{/if}
+{if $m_action=="objects"}
+		{if $objects_install}
+		<h2>Галерея объектов пользователя {$user.login}</h2>
+		<div class="body">
+			<div class="actionbutton"><a href="{$siteurl}admin/?module=modules&module_name=users&modAction=settings&m_action=dialogobject&id_user={$user.id_user}&ajax=true&get_rubrics=true&mode=new" class="change">Добавить новый объект</a></div>
+		</div>
+		<div class="body">
+			{if $user_objects}
+					<form action="{$siteurl}admin/?module=modules&module_name=users&modAction=settings&m_action=objects&id_user={$user.id_user}&sort_me=yes" method="post" id="objects_form">
+					<table class="pictures">
+					<tr>
+						<td class="objects_header" width="40%">Название</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+						<td class="objects_header" width="20%" align="center">Действия</td>
+					</tr>
+					{foreach key=key item=type from=$user_objects}
+					{foreach key=key item=obj from=$type}
+					<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="obj{$obj.id_object}">
+						<td id="preview{$obj.id_object}">{$obj.caption}</td>
+						<td align="center"><input type="text" name="sort[{$obj.id_object}]" class="textbox" value="{$obj.sort}" size="3"></td>
+						<td align="center"><input type="checkbox" name="del[{$obj.id_object}]" class="deletecheckbox" numb="0"></td>
+						<td align="center"><a href="{$siteurl}admin/?module=modules&module_name=users&modAction=settings&m_action=dialogobject&id_user={$user.id_user}&ajax=true&get_rubrics=true&mode={$obj.id_object}" class="change">изменить</a></td>
+					</tr>
+					{/foreach}
+					{/foreach}
+					</table>
+					<table class="pictures2">
+						<tr>
+							<td width="40%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+							<td width="20%"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+					</table>
+					</form>						
+			{else}
+			<p class="toDel">Для данного пользователя еще не загружено объектов</p>
+					<form action="{$siteurl}admin/?module=modules&module_name=users&modAction=settings&m_action=objects&id_user={$user.id_user}&sort_me=yes" method="post" id="objects_form">	
+					<table class="pictures nonvisible">
+					<tr>
+						<td class="objects_header" width="40%">Название</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+						<td class="objects_header" width="20%" align="center">Действия</td>
+					</tr>
+					</table>
+					<table class="pictures2 nonvisible">
+						<tr>
+							<td width="40%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+							<td width="20%"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+						</table>
+					</form>					
+			{/if}
+		</div>		
+		{else}
+		<p><b>Модуль объекты не установлен</b></p>
+		{/if}
+{/if}
+{/if}

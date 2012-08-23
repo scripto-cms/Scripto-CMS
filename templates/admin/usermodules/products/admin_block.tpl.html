@@ -1,0 +1,41 @@
+{if $block.type.type=="products" || $block.type.type=="products_random"}
+<div id="products">
+<h1 class="padding">Добавить новый товар к блоку</h1>
+<p>Выберите товар:</p>
+<form id="frm" method="post" action="{$siteurl}admin/?module=blocks&modAction=module_block&ajax=true&add_product=yes&id_block={$block.id_block}&mod_name={$block.type.module}">
+<p>
+<select name="id_product">
+	<option value="0">выберите товар</option>
+{foreach key=key item=product from=$products}
+{if $product.caption}
+	<option value="{$product.id_product}">{$product.caption} [{$product.code}]</option>
+{/if}	
+{/foreach}
+</select>
+</p>
+<p class="padding"><input type="submit" value="Добавить" class="button"></p>
+</form>
+<h1 class="padding">Товары, выводимые в данном блоке</h1>
+{if $block_products}
+{foreach key=key item=product from=$block_products}
+<p>{$product.caption} &nbsp;<a href="javascript:void(0);" onclick="YesNo('Удалить товар из блока {$block.caption}?','{$siteurl}admin/?module=blocks&modAction=module_block&delete_product=yes&ajax=yes&id_block={$block.id_block}&mod_name={$block.type.module}&id_product={$product.id_product}');"><img src="{$img}admin/icons/delete.gif" border="0"></a></p>
+{/foreach}
+{else}
+В данном блоке еще не выводится ни одного товара
+{/if}
+</div>
+{elseif $block.type.type=="products_actions"}
+<p>Выберите акцию, из которой выводить товары в данном блоке:</p>
+<form action="{$siteurl}admin/?module=blocks&modAction=module_block&ajax=true&add_product=yes&id_block={$block.id_block}&mod_name={$block.type.module}" method="post">
+<p>
+<select name="id_action">
+{foreach key=key item=action from=$block_actions}
+<option value="{$action.id_action}"{if $action.id_action==$id_action} selected{/if}>{$action.caption}</option>
+{/foreach}
+</select>
+</p>
+<p class="padding"><input type="submit" value="Сохранить" class="button"></p>
+</form>
+{else}
+Данный блок не имеет настроек
+{/if}

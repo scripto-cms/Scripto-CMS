@@ -1,0 +1,64 @@
+{if $m_action=="add"}
+{$form_html}
+{elseif $m_action=="viewopros"}
+<h2>Результаты опроса {$vote.vopros}</h2>
+		{$vote.otvet1} : <strong>{$vote.voters1}</strong>{if $vote.all>0}&nbsp;&nbsp;&nbsp;<img src="{$img}admin/line.jpg" style="width:{math equation="(x / y)*50" x=$vote.voters1 y=$vote.all format="%.f"}%;" height="2">{/if}<br>
+		{$vote.otvet2} : <strong>{$vote.voters2}</strong>{if $vote.all>0}&nbsp;&nbsp;&nbsp;<img src="{$img}admin/line.jpg" style="width:{math equation="(x / y)*50" x=$vote.voters2 y=$vote.all format="%.f"}%;" height="2">{/if}<br>
+		{if $vote.otvet3}
+		{$vote.otvet3} : <strong>{$vote.voters3}</strong>{if $vote.all>0}&nbsp;&nbsp;&nbsp;<img src="{$img}admin/line.jpg" style="width:{math equation="(x / y)*50" x=$vote.voters3 y=$vote.all format="%.f"}%;" height="2">{/if}<br>
+		{/if}
+		{if $vote.otvet4}
+		{$vote.otvet4} : <strong>{$vote.voters4}</strong>{if $vote.all>0}&nbsp;&nbsp;&nbsp;<img src="{$img}admin/line.jpg" style="width:{math equation="(x / y)*50" x=$vote.voters4 y=$vote.all format="%.f"}%;" height="2">{/if}<br>
+		{/if}
+		{if $vote.otvet5}
+		{$vote.otvet5} : <strong>{$vote.voters5}</strong>{if $vote.all>0}&nbsp;&nbsp;&nbsp;<img src="{$img}admin/line.jpg" style="width:{math equation="(x / y)*50" x=$vote.voters5 y=$vote.all format="%.f"}%;" height="2">{/if}<br>
+		{/if}
+{else}
+<div class="body">
+<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=voters&m_action=add&mode=add&modAction=settings');">Новый опрос</div>
+</div>
+<div class="body">
+{if $voters}
+<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=voters&m_action=save" method="post">
+<table width="100%" cellpadding="0" cellspacing="0" class="objects">
+<tr height="30">
+	<td width="45%" class="objects_header editable_header"><span>Вопрос</span></td>
+	<td width="10%" class="objects_header editable_header"><span>Активный</span></td>
+	<td width="10%" class="objects_header">Ответов</td>	
+	<td width="10%" class="objects_header">Дата создания</td>		
+	<td width="25%" class="objects_header" align="right">Операции</td>
+</tr>
+{foreach key=key item=vote from=$voters}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="vote{$vote.id_vote}">
+	<td class="editable"><span>{$vote.vopros}</span><input type="text" name="vopros[{$vote.id_vote}]" value="{$vote.vopros}" class="nonvisible"></td>
+	<td class="editable" align="center"><input type="checkbox" name="active[{$vote.id_vote}]" numb="0" class="checkbox" {if $vote.current}checked{/if}></td>
+	<td align="center">{$vote.all}</td>	
+	<td>{$vote.date_print}</td>
+	<td class="actions" align="right">		
+		<ul>
+			<li><a href="{$siteurl}admin/?module=modules&modAction=settings&mode=edit&id_vote={$vote.id_vote}&module_name=voters&m_action=add" title="Редактировать опрос {$vote.vopros}"><img src="{$img}admin/icons/edit.gif" alt="Редактировать опрос {$vote.vopros}"></a></li>
+			<li><a href="javascript:void(0);" onclick="YesNo('Удалить опрос {$vote.vopros}?','{$siteurl}admin/?module=modules&modAction=settings&id_vote={$vote.id_vote}&module_name=voters&m_action=delete');" title="Удалить опрос {$vote.vopros}"><img src="{$img}admin/icons/delete.gif" alt="Удалить опрос {$vote.vopros}"></a></li>	
+			<li><a href="{$siteurl}admin/?module=modules&modAction=settings&id_vote={$vote.id_vote}&module_name=voters&m_action=viewopros&ajax=yes" title="Просмотреть результаты опроса {$vote.vopros}" class="dialog"><img src="{$img}admin/icons/view.png" alt="Просмотреть результаты опроса {$vote.vopros}"></a></li>
+		</ul>
+	</td>
+</tr>
+<input type="hidden" name="idvoters[{$vote.id_vote}]" value="{$vote.id_vote}">
+{/foreach}
+<tr>
+	<td></td>
+	<td class="selectall" align="center"><input type="checkbox" numb="0"></td>
+	<td colspan="3"></td>
+</tr>
+<tr id="save_submit">
+	<td colspan="7" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+</tr>
+<input type="hidden" name="m_action" value="save">
+</form>
+</table>
+</form>
+{else}
+<p>Вы не создали ни одного опроса.</p>
+{/if}
+</div>
+</body>
+{/if}

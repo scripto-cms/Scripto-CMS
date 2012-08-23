@@ -1,0 +1,36 @@
+{if $authorized}
+<p>{$lang.users.hello} <b>{$user_login}</b> (<a href="{$siteurl}{if $current_lang}{$current_lang}{/if}{$thismodule.my_url}">{$lang.users.my_cabinet}</a>)</p>
+<p><a href="{$page.url}?user_exit=yes">{$lang.users.exit}</a></p>
+{else}
+{if $wrong_password}
+<p><b>{$lang.users.wrong_login}</b></p>
+{/if}
+<form action="{$siteurl}{if $current_lang}{$current_lang}{/if}{$thismodule.my_url}" method="post">
+<table width="100%">
+	<tr>
+		<td width="40%">{$lang.users.user_login}:</td>
+		<td width="60%"><input type="text" class="input_textbox" name="user_login"></td>
+	</tr>
+	<tr>
+		<td width="40%">{$lang.users.user_password}:</td>
+		<td width="60%"><input type="password" class="input_textbox" name="user_password"></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="checkbox" name="remember_me">&nbsp;{$lang.users.remember_me}</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td align="left"><input type="submit" value="{$lang.users.enter}"></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>{if $thismodule.register}<p><a href="{$siteurl}{if $current_lang}{$current_lang}{/if}{$thismodule.register_url}">{$lang.users.register}</a></p>{/if}</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><p><a href="{$siteurl}{if $current_lang}{$current_lang}{/if}{$thismodule.forgot_url}">{$lang.users.forgotpassword}?</a></p></td>
+	</tr>	
+</table>
+</form>
+{/if}

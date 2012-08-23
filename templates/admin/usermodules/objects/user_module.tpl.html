@@ -1,0 +1,55 @@
+{if $addMode}
+{include file=admin/usermodules/objects/form_add.tpl.html}
+{else}
+{if $full_view}
+<p align="right"><a href="{$page.url}">{$lang.objects.backto} {if $type.view_all_text}{$type.view_all_text}{else}{$lang.objects.objects}{/if}</a></p>
+{include file=$object.processor}
+{if $comments_install}
+{include file="admin/usermodules/comments/user_module.tpl.html"}
+{/if}
+{else}
+{if $objects}
+{if $show_alphabet}
+			<p>{foreach key=key item=b from=$rus_alphabet}{if $b==$str}{$b}{else}<a href="{$page.url}?str={$b}">{$b}</a>{/if}{/foreach}&nbsp;|&nbsp;
+			{foreach key=key item=b from=$eng_alphabet}{if $b==$str}{$b}{else}<a href="{$page.url}?str={$b}">{$b}</a>{/if}{/foreach}</p>
+			{if $str}
+				<p><a href="{$page.url}">{$lang.objects.viewall}</a></p>
+			{/if} 
+{/if}
+{foreach key=key item=obj from=$objects}
+{assign var="type" value=$types[$obj.id_type]}
+{include file=$obj.processor}
+{/foreach}
+{if $objects}
+	<p>
+	{$lang.objects.choosepage}:
+		{foreach key=key item=p from=$pages}
+			{if $p==$pagenumber}
+				<b>{$p+1}</b>
+			{else}
+				{if $p==0}
+					<a href="{$page.url}">{$p+1}</a>
+				{else}
+					<a href="{$page.url}?p={$p}{if $id_type}&id_type={$id_type}{/if}{if $str_url!=''}&str={$str_url}{/if}">{$p+1}</a>
+				{/if}
+			{/if}
+			&nbsp;
+		{/foreach}
+	</p>
+{/if}
+{else}
+	{if $str}
+		{if $show_alphabet}
+			<p>{foreach key=key item=b from=$rus_alphabet}{if $b==$str}{$b}{else}<a href="{$page.url}?str={$b}">{$b}</a>{/if}{/foreach}&nbsp;|&nbsp;
+			{foreach key=key item=b from=$eng_alphabet}{if $b==$str}{$b}{else}<a href="{$page.url}?str={$b}">{$b}</a>{/if}{/foreach}</p>
+			{if $str}
+				<p><a href="{$page.url}">{$lang.objects.viewall}</a></p>
+			{/if} 
+		{/if}
+		<p>{$lang.objects.notfound}</p>
+	{else}
+		<p>{$lang.objects.notfound2}</p>
+	{/if}
+{/if}
+{/if}
+{/if}

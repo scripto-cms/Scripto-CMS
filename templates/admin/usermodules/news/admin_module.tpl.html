@@ -1,0 +1,72 @@
+{if $m_action=="add"}
+{$form_html}
+{elseif $m_action=="quickedit"}
+{if $save}
+ <script>
+ 	parent.tooltip('','Изменения сохранены!',3000);
+ </script>
+{/if}
+{if $close}
+<script>
+{literal}
+	parent.show_close_dialog=false;
+	parent.$.fancybox.close();
+{/literal}
+</script>
+{/if}
+<form action="" name="frm" method="post">
+<table width="100%" cellpadding="0" cellspacing="0" class="whiteheader">
+	<tr>
+		<td width="50%">Содержимое новости <b>{$news.caption}</b></td>
+		<td width="50%" align="right"><input type="submit" value="Сохранить изменения"></td>
+	</tr>
+</table>
+<input type="hidden" name="id_news" value="{$news.id_news}">
+<input type="hidden" name="save" value="yes">
+<input type="hidden" name="close" value="1">
+{$editor}
+</form>
+{else}
+<div class="body">
+<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=news&m_action=add&mode=add&modAction=settings');">Создать новость</div>
+</div>
+<div class="body">
+{if $news}
+<p align="right">Выберите страницу: {foreach key=key item=p from=$pages}{if $p==$pg}&nbsp;<b>{$p+1}</b>&nbsp;{else}&nbsp;<a href="{$siteurl}admin?module=modules&modAction=settings&module_name=news&p={$p}">{$p+1}</a>&nbsp;{/if}{/foreach}</p>
+<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=news&p={$pg}" method="post">
+<table class="objects">
+<tr height="30">
+	<td width="44%" class="objects_header editable_header"><span>Заголовок</span></td>
+	<td width="1%" class="objects_header"></td>
+	<td width="10%" class="objects_header">Дата</td>
+	<td width="20%" class="objects_header editable_header"><span>Автор</span></td>	
+	<td width="20%" class="objects_header editable_header"><span>Источник</span></td>	
+	<td width="5%" class="objects_header" align="right">Операции</td>
+</tr>
+{foreach key=key item=nw from=$news}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="news{$nw.id_news}">
+	<td class="editable"><span>{$nw.caption}</span><input type="text" name="caption[{$nw.id_news}]" value="{$nw.caption}" class="nonvisible"></td>
+	<td align="center"><a href="{$siteurl}admin?module=modules&modAction=settings&module_name=news&ajax=yes&id_news={$nw.id_news}&m_action=quickedit" class="editor"><img src="{$admin_icons}quickedit.png" border="0"></a></td>
+	<td>{$nw.date_print}</td>
+	<td class="editable"><span>{$nw.author}</span><input type="text" name="author[{$nw.id_news}]" value="{$nw.author}" class="nonvisible"></td>	
+	<td class="editable"><span>{$nw.url}</span><input type="text" name="url[{$nw.id_news}]" value="{$nw.url}" class="nonvisible"></td>	
+	<td class="actions" align="right">		
+		<ul>
+			<li><a href="{$siteurl}admin/?module=modules&modAction=settings&mode=edit&id_news={$nw.id_news}&module_name=news&m_action=add" title="Редактировать новость {$nw.caption}"><img src="{$img}admin/icons/edit.gif"></a></li>
+			<li><a href="javascript:void(0);" onclick="YesNo('Удалить новость {$nw.caption}?','{$siteurl}admin/?module=modules&modAction=settings&id_news={$nw.id_news}&module_name=news&m_action=delete&p={$pg}');" title="Удалить новость {$nw.caption}"><img src="{$img}admin/icons/delete.gif"></a></li>		
+		</ul>
+	</td>
+</tr>
+<input type="hidden" name="idnews[{$nw.id_news}]" value="{$nw.id_news}">
+{/foreach}
+<tr id="save_submit">
+	<td colspan="7" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+</tr>
+<input type="hidden" name="m_action" value="save">
+</form>
+</table>
+{else}
+<p>Ни одной новости еще не было создано</p>
+{/if}
+</div>
+{/if}

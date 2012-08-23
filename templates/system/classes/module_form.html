@@ -1,0 +1,215 @@
+{if $include_mce}
+<script type="text/javascript" src="{$js}tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+{literal}
+<script type="text/javascript">
+tinyMCE.init({
+mode : "textareas",
+theme : "advanced",
+editor_selector : "mceEditor",
+languages : 'ru',
+disk_cache : true,
+debug : false,
+relative_urls : false,
+remove_script_host : false,
+plugins: "layer,table,save,contextmenu,paste,advhr,advimage,advlink,media,searchreplace,print,fullscreen,noneditable,visualchars,nonbreaking",
+theme_advanced_buttons1: "cut,copy,paste,pastetext,pasteword,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontselect,fontsizeselect",
+theme_advanced_buttons2 : "undo,redo,|,forecolor,backcolor,bullist,numlist,|,sub,sup,|,outdent,indent,blockquote,|,link,unlink,anchor,image,cleanup,code",
+theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,charmap,emotions,iespell,media,advhr,|,print,|,fullscreen",
+theme_advanced_toolbar_location : "top",
+theme_advanced_toolbar_location : "top",
+theme_advanced_toolbar_align : "left",
+theme_advanced_statusbar_location : "bottom",
+theme_advanced_resizing : false
+});
+
+function toggleEditor(id) {
+	if (!tinyMCE.get(id)) {
+		tinyMCE.execCommand('mceAddControl', false, id);
+	} else {
+		tinyMCE.execCommand('mceRemoveControl', false, id);
+	}
+}
+</script>
+{/literal}
+{/if}
+{if $frm.caption}
+<h2>{$frm.caption}</h2>
+{/if}
+{$frm.content}
+<table width="100%" cellpadding="0" cellspacing="0" class="content" style="padding-top:20px;padding-left:10px;padding-right:10px;padding-bottom:20px;">
+{if $is_file_form}
+<form action="{$rubric.url}" method="post" id="frm" name="frm" enctype="multipart/form-data">
+{else}
+<form action="{$rubric.url}" id="frm" name="frm" method="post">
+{/if}
+{if $form_error}
+<tr>
+<td colspan="2">
+<font style="color:#990000;font-size:18px;">{$lang.form_error}:</font>
+{foreach key=key item=err from=$form_error}
+<li style="list-style:none;list-style-position:outside;padding-left:20px;font-size:14px;padding-top:3px;padding-bottom:3px;">- {$err.description}</li>
+{/foreach}
+</td>
+</tr>
+{/if}
+{foreach key=key item=element from=$form}
+{if $element.type=="separator" || $element.type=="caption" || $element.type=="hidden"}
+{if $element.type=="hidden"}
+<input type="hidden" name="{$element.id}" value="{$element.value}">
+{else}
+<tr style="height:20px;"><td></td><td valign="middle" class="form_caption" align="left">{$element.name}</td></tr>
+{/if}
+{else}
+{if $element.type!="solmetra"}
+<tr style="height:35px;">
+<td width="35%" class="form_caption">
+{if ($element.type!="hidden") && ($element.type!="check")}
+{if $element.required}
+{$element.name} <font style="color:#cc0033;font-size:12px;">*</font>
+{else}
+{$element.name}
+{/if}
+{/if}
+{if $element.type=="kcaptcha"}
+<br><img src="{$element.value}">
+{/if}
+{if $element.sample}
+<br><font style="font-size:11px;color:#989898;">{$lang.sample}: {$element.sample}</font>
+{/if}
+</td>
+<td width="65%">
+{if $element.iserror && $form_error}
+{assign var="classname" value="error_input_textbox"}
+{assign var="classname2" value="error_input_textarea"}
+{else}
+{assign var="classname" value="input_textbox"}
+{assign var="classname2" value="input_textarea"}
+{/if}
+{if $element.type=="text"}
+<input type="{$element.type}" name="{$element.id}" value="{$element.value}" class="{$classname}">
+{/if}
+{if $element.type=="password"}
+<input type="{$element.type}" name="{$element.id}" size="{$element.size}" class="{$classname}">
+{/if}
+{if $element.type=="optionbutton"}
+{foreach key=key item=value from=$element.values}
+{if $value.id==$element.value}
+<input type="radio" name="{$element.id}" value="{$value.id}" checked>{$value.name}
+{else}
+<input type="radio" name="{$element.id}" value="{$value.id}">{$value.name}
+{/if}
+{/foreach}
+{/if}
+{if $element.type=="list"}
+<select name="{$element.id}" {$element.html} class="{$classname}" {if $element.disabled}disabled{/if}>
+{foreach key=key item=value from=$element.values}
+{if $value.id==$element.value}
+<option value="{$value.id}" selected>{$value.name}
+{else}
+<option value="{$value.id}">{$value.name}
+{/if}
+{/foreach}
+</select>
+{if $element.disabled}
+<input type="hidden" name="{$element.id}" value="{$element.value}">
+{/if}
+{/if}
+{if $element.type=="textarea"}
+<textarea name="{$element.id}" class="{$classname2}" id="{$element.id}">{$element.value}</textarea>
+{/if}
+{if $element.type=="kcaptcha"}
+<input type="text" name="{$element.id}" class="{$classname}" size="8">
+{/if}
+{if $element.type=="file"}
+<input type="file" name="{$element.id}">
+{/if}
+{if $element.type=="date"}
+{assign var="k" value="1"}
+<select name="{$element.id}_day" class="{$classname}" style="width:50px;">
+{foreach key=key item=day from=$days}
+{if $k==$element.value.0}
+<option value="{$k}" selected>{$day}
+{else}
+<option value="{$k}">{$day}
+{/if}
+{assign var="k" value=$k+1}
+{/foreach}
+</select>
+<select name="{$element.id}_month"  class="{$classname}" style="width:50px;">
+{assign var="k" value="1"}
+{foreach key=key item=month from=$months}
+{if $k==$element.value.1}
+<option value="{$k}" selected>{$month}
+{else}
+<option value="{$k}">{$month}
+{/if}
+{assign var="k" value=$k+1}
+{/foreach}
+</select>
+<select name="{$element.id}_year" class="{$classname}" style="width:100px;">
+{assign var="k" value="0"}
+{foreach key=key item=year from=$years}
+{if $year==$element.value.2}
+<option value="{$year}" selected>{$year}
+{else}
+<option value="{$year}">{$year}
+{/if}
+{assign var="k" value=$k+1}
+{/foreach}
+</select>
+{/if}
+{if $element.type=="time"}
+{assign var="k" value="1"}
+<select name="{$element.id}_hour" class="{$classname}" style="width:50px;">
+{foreach key=key item=hour from=$hours}
+{if $k==$element.value.0}
+<option value="{$k}" selected>{$hour}
+{else}
+<option value="{$k}">{$hour}
+{/if}
+{assign var="k" value=$k+1}
+{/foreach}
+</select>
+:
+<select name="{$element.id}_minute"  class="{$classname}" style="width:50px;">
+{assign var="k" value="1"}
+{foreach key=key item=minute from=$minutes}
+{if $k==$element.value.1}
+<option value="{$k}" selected>{$minute}
+{else}
+<option value="{$k}">{$minute}
+{/if}
+{assign var="k" value=$k+1}
+{/foreach}
+</select>
+{/if}
+{if $element.type=="check"}
+{if $element.value}
+<input type="checkbox" name="{$element.id}" checked>
+{else}
+<input type="checkbox" name="{$element.id}">
+{/if}
+&nbsp;{$element.name}{if $element.required}<font style="color:#cc0033;font-size:12px;">*</font>{/if}
+{/if}
+</td>
+</tr>
+{/if}
+{if $element.type=="solmetra"}
+<tr>
+<td colspan="2" style="padding-bottom:10px;">
+<p><b>{$element.name}:</b></p>
+{$element.values}
+{if $element.min && $element.max}<p style="color:#989898;font-size:12px;">ћинимальна€ длина - {$element.min} , максимальна€ длина - {$element.max}</p>{/if}
+</td>
+</tr>
+{/if}
+{/if}
+{/foreach}
+<tr>
+<td colspan="2" class="form" style="padding-top:10px;padding-right:50px;" align="right">
+<input type="hidden" name="save" value="1">
+<input type="submit" value="{$submit_name}" class="button">
+</form>
+</td>
+</tr>
+</table>

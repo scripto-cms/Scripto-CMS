@@ -1,0 +1,28 @@
+{if !$noModuleHeader}
+							<div id="module_caption">
+								<table>
+									<tr>
+										<td width="5%" nowrap class="module_caption">{if $module.caption}{$module.caption}{else}{$page.title}{/if}</td>
+										<td width="55%" nowrap class="module_settings"></td>
+										<td width="40%" nowrap class="module_info">
+											{if $module_documentation}
+											 &nbsp;<a href="{$module_documentation}" target="_blank">документация</a>
+											{/if}
+											{if $module_version}
+											 &nbsp;версия модуля: {$module_version}
+											{/if}											
+										</td>
+									</tr>
+								</table>
+							</div>
+							{if $module_path && !$ajax}
+							<div id="module_path">
+								{foreach key=key item=mod from=$module_path}
+									<li>{if $mod.url}<a href="{$mod.url}">{$mod.caption}</a>{else}{$mod.caption}{/if}</li>
+									{if $mod.active}
+										<li>></li>
+									{/if}
+								{/foreach}
+							</div>
+							{/if}		
+{/if}												

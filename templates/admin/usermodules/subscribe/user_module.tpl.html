@@ -1,0 +1,59 @@
+{foreach key=key item=vote from=$voters}
+{if $vote.may_vote}
+<form action="" method="post">
+<p><b>{$vote.vopros}:</b></p>
+<p style="padding-top:10px;padding-bottom:10px;">
+<input type="radio" name="otvet" value="1">&nbsp;&nbsp;{$vote.otvet1}<br>
+<input type="radio" name="otvet" value="2">&nbsp;&nbsp;{$vote.otvet2}<br>
+{if $vote.otvet3}
+<input type="radio" name="otvet" value="3">&nbsp;&nbsp;{$vote.otvet3}<br>
+{/if}
+{if $vote.otvet4}
+<input type="radio" name="otvet" value="4">&nbsp;&nbsp;{$vote.otvet4}<br>
+{/if}
+{if $vote.otvet5}
+<input type="radio" name="otvet" value="5">&nbsp;&nbsp;{$vote.otvet5}<br>
+{/if}
+<input type="hidden" name="id_vote" value="{$vote.id_vote}"><br>
+<input type="submit" value="{$lang.voters.vote}">
+</p>
+{else}
+<p><b>{$vote.vopros}</b><br>{if $vote.current}<font style="color:red;">{$lang.voters.active}</font>{else}<font style="color:#d2d2d2;">{$lang.voters.ended}</font>{/if}</p>
+<table width="50%">
+	<tr>
+		<td width="50%">{$vote.otvet1} ({$vote.voters1})</td>
+		<td width="50%" align="left"><img src="{$img}admin/line.jpg" style="width:{math equation="(x / y)*90" x=$vote.voters1 y=$vote.all format="%.f"}%;" height="2"></td>
+	</tr>
+	<tr>
+		<td width="50%">{$vote.otvet2} ({$vote.voters2})</td>
+		<td width="50%" align="left"><img src="{$img}admin/line.jpg" style="width:{math equation="(x / y)*90" x=$vote.voters2 y=$vote.all format="%.f"}%;" height="2"></td>
+	</tr>
+	{if $vote.otvet3}
+	<tr>
+		<td width="50%">{$vote.otvet3} ({$vote.voters3})</td>
+		<td width="50%" align="left"><img src="{$img}admin/line.jpg" style="width:{math equation="(x / y)*90" x=$vote.voters3 y=$vote.all format="%.f"}%;" height="2"></td>
+	</tr>
+	{/if}
+	{if $vote.otvet4}
+	<tr>
+		<td width="50%">{$vote.otvet4} ({$vote.voters4})</td>
+		<td width="50%" align="left"><img src="{$img}admin/line.jpg" style="width:{math equation="(x / y)*90" x=$vote.voters4 y=$vote.all format="%.f"}%;" height="2"></td>
+	</tr>			
+	{/if}
+	{if $vote.otvet5}
+	<tr>
+		<td width="50%">{$vote.otvet5} ({$vote.voters5})</td>
+		<td width="50%" align="left"><img src="{$img}admin/line.jpg" style="width:{math equation="(x / y)*90" x=$vote.voters5 y=$vote.all format="%.f"}%;" height="2"></td>
+	</tr>			
+	{/if}		
+</table>
+<p style="padding-bottom:20px;">{$lang.voters.all_voted} {$vote.all} {$lang.voters.people}</p>
+{/if}
+{/foreach}
+{foreach key=key item=pg from=$voters_pages}
+{if $voters_page==$pg}
+<b>{$pg+1}</b>&nbsp;
+{else}
+<a href="{$page.url}{if $pg>0}?voters_pg={$pg}{/if}">{$pg+1}</a>&nbsp;
+{/if}
+{/foreach}

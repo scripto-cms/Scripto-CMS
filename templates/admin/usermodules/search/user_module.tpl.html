@@ -1,0 +1,21 @@
+<h2>{$lang.search.newsearch}:</h2>
+<form action="{$search_url}" method="post">
+<input type="text" name="str" value="{$str}" size="30"> <input type="submit" value="{$lang.search.search_button}">
+</form>
+{if $str}
+<h2>{$lang.search.search_result}</h2>
+<p>{$lang.search.categories}:</p>
+{assign var="k" value=1}
+{foreach key=key item=obj from=$items}
+<p><strong>{$k}.</strong> <a href="{$siteurl}{$urls[$obj.id_category]}?highlight={$str}">{$obj.caption}</a></p>
+{assign var="k" value=$k+1}
+{/foreach}
+<p>{$lang.search.objects}</p>
+{assign var="k" value=1}
+{foreach key=key item=obj from=$dop_objects}
+<p><strong>{$k}.</strong> <a href="{$siteurl}{$urls[$obj.id_category]}{$obj.prist}">{$obj.caption}</a></p>
+{assign var="k" value=$k+1}
+{/foreach}
+{else}
+<h2>{$lang.search.empty_string}</h2>
+{/if}

@@ -1,0 +1,11 @@
+{foreach key=key item=position from=$rubrics}
+	{foreach key=key item=category from=$position}
+	{if $category.caption}
+	{if $id_category==$category.id_category}
+		<p style="padding-left:{math equation="x*7" x=$category.level}px;"><b>{$category.caption} {if $category.products}[{$category.products}]{/if}</b>&nbsp;&nbsp;<a href="{$siteurl}admin/?module=catalog&modAction=add&id_cat={$category.id_category}&ajax=yes&mod_name=products" title="{$lang.interface.add_category}" class="dialog{if $category.visible==0} nvisible{/if}"><img src="{$img}admin/icons/add_16.gif" width="12"></a></p>
+	{else}
+		<p style="padding-left:{math equation="x*7" x=$category.level}px;"><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=view&modAction=settings&id_category={$category.id_category}"{if $category.visible==0} class="nvisible"{/if}>{$category.caption}</a> {if $category.products}[{$category.products}]{/if}&nbsp;&nbsp;<a href="{$siteurl}admin/?module=catalog&modAction=add&id_cat={$category.id_category}&ajax=yes&mod_name=products" title="{$lang.interface.add_category}" class="dialog"><img src="{$img}admin/icons/add_16.gif" width="12"></a></p>
+	{/if}
+	{/if}
+	{/foreach}
+{/foreach}

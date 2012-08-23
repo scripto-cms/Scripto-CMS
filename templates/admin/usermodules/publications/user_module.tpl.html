@@ -1,0 +1,39 @@
+{if $publication}
+<p><a href="{$page.url}"><< {$lang.publications.backto}</a></p>
+<h2 style="padding-top:5px;padding-bottom:10px;font-weight:lighter;">{$lang.publications.viewpublication} {$publication.caption}</h2>
+{if $publication.pages}
+{$publication.content_page}
+{foreach from=$publication.pages key=k item=pg}
+{if $pg==$publication.current_page}
+<b>{$pg+1}</b>&nbsp;
+{else}
+<a href="{if $pg==0}{$page.url}{else}{$page.url}?publication_page={$pg}&publicationID={$publication.id_publication}{/if}">{$pg+1}</a>&nbsp;
+{/if}
+{/foreach}
+{else}
+{$publication.content_page}
+{/if}
+{if $publication.author}
+{$lang.publications.author}: {if $publication.url}<a href="{$publication.url}" target="_blank">{$publication.author}</a>{else}{$publication.author}{/if}
+{else}
+{if $publication.url}
+{$lang.publications.link_to_author}: <a href="{$publication.url}" target="_blank">{$publication.url}</a>
+{/if}
+{/if}
+{if $comments_install}
+{include file="admin/usermodules/comments/user_module.tpl.html"}
+{/if}
+{else}
+{if $publications}
+{foreach key=key item=obj from=$publications}
+<div class="bodyitem">
+<h3><span>{$obj.date_print}</span> {$obj.caption}</h3>
+<div class="small">
+{$obj.content}
+</div>
+<p><a href="{$page.url}?publicationID={$obj.id_publication}">{$lang.publications.podr} >></a></p>
+</div>
+{/foreach}
+<p class="choosepage">{$lang.publications.choosepage}: {foreach key=key item=p from=$pages}{if $p==$pg}&nbsp;<b>{$p+1}</b>&nbsp;{else}&nbsp;<a href="{$page.url}{if $p>0}?p={$p}{/if}">{$p+1}</a>&nbsp;{/if}{/foreach}</p>
+{/if}
+{/if}

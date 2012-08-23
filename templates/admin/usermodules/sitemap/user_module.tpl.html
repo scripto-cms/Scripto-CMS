@@ -1,0 +1,7 @@
+<ul>
+	{foreach key=key item=cat1 from=$rubrics}
+		{foreach key=key item=cat from=$cat1}
+			<li style="padding-left: {math equation="x * y" x="5" y=$cat.level}px;list-style:none;"><a href="{if $cat.rss_link}{$cat.rss_link}{else}{$cat.url}{/if}" target="_blank">{$cat.caption}</a></li>
+		{/foreach}
+	{/foreach}
+</ul>

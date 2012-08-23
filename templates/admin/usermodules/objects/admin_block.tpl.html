@@ -1,0 +1,58 @@
+{if $block.type.type=="lastobjects"}
+<h2>Объекты, выводимые в блоке {$block.caption}</h2>
+{if $save}
+<p><b>Данные успешно сохранены!</b></p>
+{/if}
+{if $all_types}
+<form action="" method="post">
+	<table width="300">
+		<tr>
+			<td height="10%"></td>
+			<td height="90%">Название типа</td>
+		</tr>
+		{foreach key=key item=type from=$all_types}
+		<tr>
+			<td align="center"><input type="checkbox" name="type[{$type.id_type}]" {if $type.checked}checked{/if}></td>
+			<td>{$type.caption}</td>
+		</tr>
+		{/foreach}
+		<tr>
+			<td colspan="2" align="center"><input type="submit" value="Сохранить"></td>
+		</tr>
+	</table>
+	<input type="hidden" name="save" value="yes">
+	<input type="hidden" name="id_block" value="{$block.id_block}">
+</form>
+{else}
+	<p>Ни одного типа объектов еще не создано</p>
+{/if}
+{elseif $block.type.type=="addobjects"}
+<h2>Выводить в блоке ссылки на добавление следующих типов объектов:</h2>
+<p>Ссылка на добавление объекта появится только в том случае, если в данном типе разрешено добавление новых объектов</p>
+{if $save}
+<p><b>Данные успешно сохранены!</b></p>
+{/if}
+{if $all_types}
+<form action="" method="post">
+	<table width="300">
+		<tr>
+			<td height="10%"></td>
+			<td height="90%">Название типа</td>
+		</tr>
+		{foreach key=key item=type from=$all_types}
+		<tr>
+			<td align="center"><input type="checkbox" name="type[{$type.id_type}]" {if $type.checked}checked{/if}></td>
+			<td>{$type.caption}</td>
+		</tr>
+		{/foreach}
+		<tr>
+			<td colspan="2" align="center"><input type="submit" value="Сохранить"></td>
+		</tr>
+	</table>
+	<input type="hidden" name="save" value="yes">
+	<input type="hidden" name="id_block" value="{$block.id_block}">
+</form>
+{else}
+	<p>Ни одного типа объектов еще не создано</p>
+{/if}
+{/if}

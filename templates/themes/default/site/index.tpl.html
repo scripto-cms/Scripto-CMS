@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+	<title>{if $page.title}{$page.title}{else}{if $settings.title}{$settings.title}{else}{$settings.caption} | {$page.caption}{/if}{/if}</title>
+	<meta name="description" content="{if $page.meta}{$page.meta}{else}{$settings.meta}{/if}">
+	<meta name="Keywords" content="{if $page.keywords}{$page.keywords}{else}{$settings.keywords}{/if}">
+	{if $iphone}
+	{$iphone_meta}
+	{/if}
+	<link rel="StyleSheet" href="{$img_theme}css/style.css" type="text/css">
+	<link rel="StyleSheet" href="{$img_theme}js/menu/menu.css" type="text/css">	
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">	
+	{$jquery}
+	<script type="text/javascript" src="{$img_theme}js/site.js"></script>
+</head>
+<body>
+	<div id="container"><div id="subcontainer">
+	<a name="home"></a>
+		<div id="header">
+			<div id="logo">{if !$page.main_page}<a href="{$siteurl}{$current_lang}" title="{$settings.caption}">{/if}<img src="{$img_theme}logo.jpg" alt="{$settings.caption}" />{if !$page.main_page}</a>{/if}</div>
+			<div id="support">
+				{$blocks.contacts.content}
+			</div>
+			<div id="search">
+				{$blocks.search.content}
+			</div>
+			<div id="languages">
+				<ul>
+					{foreach key=key item=lng from=$languages}
+						<li>{if $mainlang==$lng.ident}<b>{$lng.ident}</b>{else}<a href="{$siteurl}{$lng.ident}/">{$lng.ident}</a>{/if}</li>
+					{/foreach}
+				</ul>
+			</div>
+			<div id="nav">
+				<ul>
+					{if !$page.main_page}
+					<li><a href="{$siteurl}{$current_lang}" title="{$lang.goto_main}"><img src="{$img_theme}home.jpg" alt="{$lang.goto_main}" border="0" /></a></li>
+					{else}
+					<li><img src="{$img_theme}home_index.jpg" alt="{$lang.onmain}" border="0" /></li>
+					{/if}
+					<li><a href="mailto:support@scripto.ru" title="{$lang.siteadmin}"><img src="{$img_theme}mail.jpg" alt="{$lang.siteadmin}" /></a></li>
+				</ul>
+			</div>
+		</div>
+		<div id="intro"></div>	
+		<div id="horizontalmenu">
+			<ul>
+			{if $page.main_page}
+				<li><a href="{$siteurl}{$current_lang}" class="selected">{$lang.mainpage}</a></li>
+			{else}
+				<li><a href="{$siteurl}{$current_lang}">{$lang.mainpage}</a></li>
+			{/if}
+		 {foreach key=key item=cat from=$rubrics.up} 	
+			{if $cat.level==1}
+				{if $cat.caption}
+				    <li><a href="{if $cat.rss_link}{$cat.rss_link}{else}{$cat.url}{/if}" {if $cat.selected && !$cat.main_page}class="selected"{/if}>{$cat.caption}</a></li>
+				  {/if}
+			{/if}
+	    {/foreach}		
+			</ul>
+		</div>
+		<div id="content">
+			<div id="content_left">
+				{if $real_path[1].categories>0}
+				<div class="block">
+					<div class="blockcaption">{$lang.choose_sub_category}&nbsp;<img src="{$img_theme}r.jpg"></div>
+					<div class="bbody">
+						<ul>
+						{if $page.level>0 && $page.categories>0}
+						 {foreach key=key item=cat from=$rubrics.up}
+						 	{if $page.id_category==$cat.id_sub_category}
+						 		<li>{if $cat.selected}<b>{$cat.caption}</b>{else}<a href="{if $cat.rss_link}{$cat.rss_link}{else}{$cat.url}{/if}">{$cat.caption}</a>{/if}</li>
+						 	{/if}
+						 {/foreach}
+						 {else}
+						 {foreach key=key item=cat from=$rubrics.up}
+						 	{if $page.id_sub_category==$cat.id_sub_category}
+						 		<li>{if $cat.selected}<b>{$cat.caption}</b>{else}<a href="{if $cat.rss_link}{$cat.rss_link}{else}{$cat.url}{/if}">{$cat.caption}</a>{/if}</li>
+						 	{/if}
+						 {/foreach}						 
+						{/if}
+						 </ul>
+					</div>
+				</div>			
+				{/if}						
+				{foreach key=key item=block from=$blocks}
+					{if $block.type.module!=''}
+						<div class="block">
+							<div class="blockcaption">{$block.caption}</div>
+							<div class="bbody">
+								{$block.content}
+							</div>
+						</div>
+					{/if}
+				{/foreach}
+			</div>
+			<div id="content_right">
+			{if $blocks.banner.content}<div id="banner">{$blocks.banner.content}</div>{/if}
+			<div class="separator"></div>
+			<div id="contentbody">
+				{if !$page.main_page}
+				<div class="separator">
+				{foreach key=key item=pth from=$real_path}
+				{if $key>0 && !$pth.is_last}
+				 >
+				{/if}
+					{if $pth.is_last}
+						<img src="{$img_theme}r.jpg">
+					{else}
+						<a href="{if $pth.rss_link}{$pth.rss_link}{else}{$pth.url}{/if}">{$pth.caption}</a>
+					{/if}
+				{/foreach}
+				</div>			
+				{/if}
+				<h1>{$page.caption}</h1>
+				{if $page.big_preview}<p><img src="{$user_thumbnails}{$page.big_preview}" align="left" padding="7">{/if}
+				{$content.text}
+				{if $page.big_preview}</p>{/if}
+				{$content.image}
+				{$content.audio}
+				{$content.flash}
+				{$content.video}
+				{foreach key=key item=mod from=$page.modules}
+				{$mod.content}
+				{/foreach}
+				{foreach key=key item=mod from=$page.static_modules}
+				{$mod.content}
+				{/foreach}
+			</div>				
+			</div>
+		</div>
+	</div></div>
+	<div id="mama_footer">
+		<div id="footer">
+			<div id="copyright">{$blocks.copyright.content}</div>
+			<div id="control"><a href="#home">{$lang.up}</a></div>
+			<div id="counters">
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

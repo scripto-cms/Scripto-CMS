@@ -1,0 +1,226 @@
+{if $not_install_products}
+<p>{$lang.basket.not_products}</p>
+{else}
+{if $m_type=="basket"}
+<div class="basket">
+{if $basket}
+<form action="" method="post">
+<table width="100%">
+<tr>
+	<td width="10%" bgcolor="#f3f3f3">{$lang.basket.image}</td>
+	<td width="40%" bgcolor="#f3f3f3">{$lang.basket.caption}</td>
+	<td width="23%" bgcolor="#f3f3f3">{$lang.basket.price1}</td>
+	<td width="9%" bgcolor="#f3f3f3">{$lang.basket.count}</td>
+	<td width="23%" bgcolor="#f3f3f3">{$lang.basket.price2}</td>
+	<td width="5%" bgcolor="#f3f3f3">{$lang.basket.delete}</td>
+</tr>
+{assign var="k" value=0}
+{foreach key=key item=p from=$basket.products}
+{foreach key=key item=prod from=$p}
+<tr height="80">
+	<td align="center">{foreach key=key item=pic from=$prod.pictures}{if $pic.main_picture}<img src="{$user_thumbnails}{$pic.small_filename}" border="0" alt="{$prod.caption}" width="50">{/if}{/foreach}</td>
+	<td>{$prod.caption} {if $prod.code}[{$prod.code}]{/if}
+		<p>(<a href="{$siteurl}{$favorite_url}?add=yes&id_product={$prod.id_product}">{$lang.basket.compare}</a>)</p>	
+	{if $prod.options}
+		<p style="padding:0px;font-size:11px;">{$lang.basket.options}:</p>
+		{foreach key=key2 item=option from=$prod.options}
+		{assign var="n" value=0}
+		<p style="padding:0px;font-size:11px;">
+			{foreach key=key3 item=value from=$option}
+			{if $n==0}
+			<b>{$value}</b>: <br>
+			{/if}
+			{$key3}<br> 
+			{assign var="n" value=$n+1}
+			{/foreach}
+		</p>
+		{/foreach}
+	{/if}
+	</td>
+	<td>{$prod.price1} руб. {if $prod.variant}({$prod.variant.caption}){/if}</td>
+	<td align="center"><input type="text" name="count[{$k}]" value="{$prod.count}" size="3" maxlength="2"></td>
+	<td>{$prod.price_itogo_print}</td>
+	<td align="center"><input type="checkbox" name="del[{$k}]"></td>
+</tr>
+<input type="hidden" name="id_product[{$k}]" value="{$prod.id_product}">
+{if $prod.variant}
+<input type="hidden" name="id_variant[{$k}]" value="{$prod.variant.id_variant}">
+{else}
+<input type="hidden" name="id_variant[{$k}]" value="0">
+{/if}
+{assign var="k" value=$k+1}
+{/foreach}
+{/foreach}
+<tr>
+	<td colspan="4" align="right" style="font-size:18px;">{$lang.basket.itogo}:</td>
+	<td colspan="2" align="right" style="font-size:18px;">{$basket.itogo}</td>
+</tr>
+<tr height="10"><td colspan="6"></td></tr>
+<tr>
+	<td colspan="3" align="center"><input type="submit" value="{$lang.basket.change_button}"><input type="hidden" name="m_action" value="save">
+</form></td>
+	<td colspan="3" align="right"><form action="{$order_url}"><input type="submit" value="{$lang.basket.order_button}" style="font-size:18px;"></form></td>
+</tr>
+</table>
+{else}
+<p>{$lang.basket.not_add}</p>
+{/if}
+{if $opts}
+<h2>{$lang.basket.opt}</h2>
+{$lang.basket.opt_description}
+<table width="350">
+<tr>
+	<td width="50%" bgcolor="#f3f3f3" align="center">{$lang.basket.total_order}</td>
+	<td width="50%" bgcolor="#f3f3f3" align="center">{$lang.basket.discount_sale}</td>
+</tr>
+{foreach key=key item=op from=$opts}
+<tr>
+	<td align="center">> {$op.print}</td>
+	<td align="center">{$op.percent}%</td>
+</tr>
+{/foreach}
+</table>
+{$lang.basket.calculated}
+{/if}
+<h2>{$lang.basket.activate_kupon}</h2>
+{$lang.basket.kupon_description}
+</div>
+{else}
+<div class="basket">
+<p style="padding-bottom:10px;">
+{if $m_action=="step2"}
+{$lang.basket.step2}
+{else}
+{$lang.basket.step1}
+{/if}
+{$lang.basket.step}
+</p>
+{if $m_action=="step2"}
+{if !$basket.products}
+{$lang.basket.not_add}
+{/if}
+{if $ordered}
+{if $order_id}
+<h1>{$lang.basket.send}!</h1>
+<p>{$lang.basket.ident}<b>{$order_id}</b></p>
+{if $mode=="new"}
+<h1>{$lang.basket.register}</h1>
+<p>{$lang.basket.user} <b>{$user.login}</b> {$lang.basket.user1}: <b>{$password}</b></p>
+<p>{$lang.basket.save_password}</p>
+{/if}
+{if $coupon_has_been_activated}
+{$lang.basket.activate_maximum}
+{/if}
+<h1>{$lang.users.customer_info}</h1>
+<p>{$lang.users.fio}: <b>{$user.fio}</b></p>
+<p>E-mail: <a href="mailto:{$cuser.email}">{$user.email}</a></p>
+<p>{$lang.users.phone1.caption}: {if $user.phone1}<b>{$user.phone1}</b>{else}{$lang.users.empty}{/if}</p>
+<p>{$lang.users.phone2.caption}: {if $user.phone2}<b>{$user.phone2}</b>{else}{$lang.users.empty}{/if}</p>
+<p>{$lang.users.delivery}: <b>{if $order.delivery}{$order.delivery}{else}{$lang.users.empty}{/if}</b></p>
+<p>{$lang.users.address}: <b>{if $order.address}{$order.address}{else}{$lang.users.empty}{/if}</b></p>
+<p>{$lang.users.payment}: <b>{if $order.payment}{$order.payment}{else}{$lang.users.empty}{/if}</b></p>
+<h1>{$lang.users.products}</h1>
+<table width="100%">
+<tr height="30">
+	<td width="25%" class="objects_header">{$lang.users.product_code}</td>
+	<td width="25%" class="objects_header">{$lang.users.product_caption}</td>
+	<td width="15%" class="objects_header">{$lang.users.count}</td>
+	<td width="15%" class="objects_header">{$lang.users.price}</td>
+	<td width="20%" class="objects_header">{$lang.users.itogo}</td>
+</tr>
+{foreach key=key item=prod from=$order.products}
+<tr height="30" bgcolor="#{cycle values="eeeeee,ffffff"}" id="order{$ord.id_order}">
+	<td>{$prod.code}</td>
+	<td>{$prod.caption}
+	{if $prod.options}
+	<p><b>{$lang.users.variants}:</b></p>
+	{foreach key=key item=option from=$prod.options}
+	{assign var="n" value=0}
+	<p>
+		{foreach key=key2 item=value from=$option}
+			{if $n==0}
+				<b>{$value}</b>:<br>
+			{/if}
+			{$key2}<br>
+			{assign var="n" value=$n+1}
+		{/foreach}
+	</p>
+	{/foreach}
+	{/if}
+	</td>
+	<td>{$prod.count}</td>
+	<td>{$prod.print_price}</td>
+	<td align="right">{$prod.print_itogo}</td>
+</tr>
+{/foreach}
+<tr>
+	<td colspan="4" align="right"><b>{$lang.users.itogo_delivery}:</b></td>
+	<td align="right"><b>{$order.print_price}</b></td>
+</tr>
+{if $order.print_coupon}
+<tr height="20">
+	<td colspan="4" align="right">{$lang.users.discount} {$order.coupon_caption} ({$order.coupon_code})</td>
+	<td align="right">- {$order.coupon_price} {if $order.coupon_type==0}руб.{/if}{if $order.coupon_type==1}%{/if}</td>
+</tr>
+<tr height="20">
+	<td colspan="4" align="right"><b>{$lang.users.itogo_delivery}:</b></td>
+	<td align="right"><b>{$order.print_coupon_itogo}</b></td>
+</tr>
+{/if}
+{if $order.print_discount_price}
+<tr height="20">
+	<td colspan="4" align="right">{$lang.users.discount_value} {$order.discount_caption}</td>
+	<td align="right">- {$order.print_discount_price}</td>
+</tr>
+<tr height="20">
+	<td colspan="4" align="right"><b>{$lang.users.itogo_delivery}:</b></td>
+	<td align="right"><b>{$order.print_discount_itog}</b></td>
+</tr>
+{/if}
+</table>
+{else}
+{$lang.basket.order_error}
+{/if}
+{else}
+{$form_html}
+{/if}
+{else}
+{if $not_authorized}
+{literal}
+<script>
+function showForm(val) {
+	var obj=document.getElementById('vis');
+	if (val=='auth') {
+		obj.style.display='block';
+	} else {
+		obj.style.display='none';		
+	}
+}
+</script>
+{/literal}
+<p>{$lang.basket.welcome}</p>
+<p style="color:#cc0033;">
+{if $wrong_password}
+{$lang.basket.attention}
+{/if}
+</p>
+<p style="font-size:14px;padding-top:10px;padding-bottom:10px;">
+<form action="{$page.url}?m_action=step1" method="post" id="frm">
+<input type="radio" name="user_type" value="new" onclick="showForm(this.value);">&nbsp;{$lang.basket.new_user}<br>
+<input type="radio" name="user_type" value="auth" onclick="showForm(this.value);">&nbsp;{$lang.basket.registered}<br>
+<div class="visible_none" id="vis" style="width:100%;height:100px;float:left;display:none;">
+{$lang.basket.yourlogin}:<br>
+<input type="text" name="login" value="" size="18"><br>
+{$lang.basket.yourpassword}:<br>
+<input type="password" name="password" value="" size="18"><br>
+</div>
+<input type="submit" value="{$lang.users.next}">
+</form>
+</p>
+{else}
+
+{/if}
+{/if}
+</div>
+{/if}
+{/if}

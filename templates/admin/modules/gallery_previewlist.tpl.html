@@ -1,0 +1,63 @@
+{if $id_category}
+<div class="body">	
+<div id="btn1" class="actionbutton" idcat="{$id_category}">Загрузить файл</div>
+<div id="urldownload" class="actionbutton" idcat="{$id_category}">Загрузить из URL</div>
+</div>
+{literal}
+<script>
+	var button=$("#btn1"),interval;
+	var idcat=$("#btn1").attr("idcat");
+	var str_cat='';
+	if (idcat>0) {
+		str_cat='&id_cat=' + idcat;
+	}	
+
+try {
+	ajax_upload(button);	
+} catch(e) {}
+</script>
+{/literal}
+<div class="body">
+{if $count_objects>0}
+{if $type=="video"}
+<div class="icons" type="video">
+{else}
+<div class="icons" type="image">
+{/if}
+{if $type=="video"}
+{foreach key=key item=object from=$objects.video}
+<div class="preview" id="obj{$object.id_video}">
+	<div class="preview_picture" style="background:url('{$img}admin/icons/video.png') center no-repeat;"><img src="{$img}admin/blank.gif" border="0" width="120" height="130" alt="{$object.caption}"></div>
+	<div class="preview_caption">{$object.caption|truncate:17:"..."}<input type="hidden" name="objects[{$object.id_video}]" value="0" idobject="{$object.id_video}"></div>
+</div>
+{/foreach}
+{else}
+{foreach key=key item=object from=$objects.image}
+{if $object.preview}
+<div class="preview" id="obj{$object.id_photo}">
+	<div class="preview_picture" style="background:url('{$user_thumbnails}{$object.preview}') center no-repeat;"><img src="{$img}admin/blank.gif" border="0" width="120" height="130" alt="{$object.caption}"></div>
+	<div class="preview_caption">{$object.caption|truncate:17:"..."}<input type="hidden" name="objects[{$object.id_photo}]" value="0" idobject="{$object.id_photo}"></div>
+</div>
+{/if}
+{/foreach}
+{/if}
+</div>
+{else}
+{if $type=="video"}
+<div class="icons" type="video">
+{else}
+<div class="icons" type="image">
+{/if}
+</div>
+<div class="body" id="clear">
+{if $type=="video"}
+<p>В данном разделе нет ни одного видео</p>
+{else}
+<p>В данном разделе нет ни одного изображения</p>
+{/if}
+</div>
+{/if}
+</div>
+{else}
+<p>Пожалуйста выберите раздел слева</p>
+{/if}

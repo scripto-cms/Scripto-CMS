@@ -1,0 +1,182 @@
+{if $product}
+<table width="100%">
+<tr>
+{if $product.pictures.0.medium_filename}
+	<td width="40%" valign="top">
+	<img src="{$user_thumbnails}{$product.pictures.0.medium_filename}" border="0" alt="{$product.caption}" width="90%">
+{foreach key=key item=object from=$product.pictures}
+<div class="product_mini_photo"><a rel="lightbox-tour" href="{$user_images}{$object.big_filename}" title="{$product.caption}"><img src="{$user_thumbnails}{$object.small_filename}" border="0" alt="{$product.caption}"></a></div>
+{/foreach}	
+	</td>
+{/if}
+	<td valign="top">
+		{if $product.code}
+		<p>{$lang.products.code}: <b>{$product.code}</b></p>
+		{/if}	
+		{$product.content_full}
+		{if $product.values.options}
+		<table width="400">
+			{foreach key=key item=val from=$product.values.options}
+				<tr>
+					<td width="40%">{$val.caption}</td>
+					<td width="60%">{$val.value}</td>
+				</tr>
+			{/foreach}
+		</table>
+		{/if}
+		{if $product.price_print}
+		<h1>{$lang.products.price}: {if $product.price2>0}<s>{$product.price2_print}</s>&nbsp;{/if}{$product.price_print}</h1>
+		{/if}		
+<form action="{$siteurl}{$current_lang}{$thismodule.favorite_url}" method="get" encType="multipart/form-data">
+<p align="center"><input type="submit" value="{$lang.products.addtofavorite}" id="favoritebtn"></p>
+<input type="hidden" name="add" value="yes">
+<input type="hidden" name="id_product" value="{$product.id_product}">
+</form>			
+{if $shop_on}
+<form action="{$siteurl}{$bskt.basket_url}?m_action=add" method="post" encType="multipart/form-data">
+{if $options[1]}
+<p><b>{$lang.products.options}:</b></p>
+<table width="400">
+{foreach key=key item=option from=$options[1]}
+{if $option.values_list}
+	<tr>
+		<td width="40%">{$option.caption}</td>
+		<td width="60%">
+		<select name="options[{$option.id_option}]">
+		{foreach key=key item=value from=$option.values_list}
+			<option value="{$value}">{$value}</option>
+		{/foreach}
+		</select>
+		<input type="hidden" name="caption[{$option.id_option}]" value="{$option.caption}">
+		</td>
+	</tr>
+{/if}
+{/foreach}
+</table>
+{/if}
+
+<p style="padding-top:20px;text-align:center;"><input type="submit" value="{$lang.products.inbasket}" id="orderbtn"></p>
+<input type="hidden" name="products[{$product.id_product}]" value="1">
+</form>		
+{/if}
+	</td>
+</tr>
+</table>
+{else}
+{if $action}
+{$action.content}
+{/if}
+{if $firm}
+{if !$coll}
+{$firm.description}
+{/if}
+{if $collections}
+<h2>Коллекции фирмы {$firm.caption}</h2>
+{foreach key=key item=collection from=$collections}
+<p>{if $coll.id_collection==$collection.id_collection}<b>{$collection.caption}</b>{else}<a href="{$siteurl}{$current_lang}{$thismodule.brand_url}?id_firm={$firm.id_firm}&id_collection={$collection.id_collection}">{$collection.caption}</a>{/if}</p>
+{/foreach}
+{/if}
+{/if}
+{if $compare}
+{if $products}
+<div id="compare">
+	<table>
+		<tr>
+			{foreach key=key item=product from=$products}
+				<td valign="top">
+					<div class="compare_item">
+						<div class="compare_caption"><a href="{$siteurl}{$urls[$product.id_category]}?productID={$product.id_product}" target="_blank">{$product.caption}</a></div>
+						<div class="compare_picture">{if $product.picture.small_filename}<table cellpadding="0" cellspacing="0"><tr><td align="center" valign="middle"><a rel="lightbox-tour" href="{$user_thumbnails}{$product.picture.medium_filename}" target="_blank"><img src="{$user_thumbnails}{$product.picture.small_filename}" border="0" alt="{$page.caption}"></a></td></tr></table>{/if}</div>
+						<div class="compare_description">
+							<p class="price">{$lang.products.price}: {if $product.price2>0}<s>{$product.price2_print}</s>&nbsp;{/if}{$product.price_print}</p>
+							{$product.content}
+							{if $product.values.options}
+							<table width="180">
+							{foreach key=key item=val from=$product.values.options}
+								<tr>
+									<td width="40%">{$val.caption}</td>
+									<td width="60%">{$val.value}</td>
+								</tr>
+							{/foreach}
+							</table>
+							{/if}
+{if $shop_on}
+<form action="{$siteurl}{$bskt.basket_url}?m_action=add" method="post" encType="multipart/form-data">
+{if $options[1]}
+<p><b>{$lang.products.options}:</b></p>
+<table width="400">
+{foreach key=key item=option from=$options[1]}
+{if $option.values_list}
+	<tr>
+		<td width="40%">{$option.caption}</td>
+		<td width="60%">
+		<select name="options[{$option.id_option}]">
+		{foreach key=key item=value from=$option.values_list}
+			<option value="{$value}">{$value}</option>
+		{/foreach}
+		</select>
+		<input type="hidden" name="caption[{$option.id_option}]" value="{$option.caption}">
+		</td>
+	</tr>
+{/if}
+{/foreach}
+</table>
+{/if}
+
+<p style="padding-top:20px;text-align:center;"><input type="submit" value="{$lang.products.inbasket}" id="orderbtn"></p>
+<input type="hidden" name="products[{$product.id_product}]" value="1">
+</form>		
+{/if}							
+							<form action="{$siteurl}{$current_lang}{$thismodule.favorite_url}" method="get" encType="multipart/form-data">
+							<p align="center"><input type="submit" value="{$lang.products.remove_favorites}"></p>						
+							<input type="hidden" name="remove" value="yes">
+							<input type="hidden" name="id_product" value="{$product.id_product}">
+							</form>
+						</div>
+					</div>
+				</td>
+			{/foreach}
+		</tr>
+	</table>
+</div>
+{else}
+<p>{$lang.products.no_favorite_products}</p>
+{/if}
+{else}
+{if $products}
+<p>{$lang.products.sort}: {$lang.products.sort_price} ({if $sort=="price" && $desc!="yes"}<b>{$lang.products.down}.</b>{else}<a href="{$page.url}?sort=price{if $firm}&id_firm={$firm.id_firm}{/if}{if $coll}&id_collection={$coll.id_collection}{/if}{if type}&id_type={$type.id_type}{/if}">{$lang.products.down}.</a>{/if}&nbsp;{if $sort=="price" && $desc=="yes"}<b>{$lang.products.up}.</b>{else}<a href="{$page.url}?sort=price&desc=yes{if $firm}&id_firm={$firm.id_firm}{/if}{if $coll}&id_collection={$coll.id_collection}{/if}{if type}&id_type={$type.id_type}{/if}">{$lang.products.up}.</a>{/if}) | {$lang.products.sort_caption} ({if $sort=="caption" && $desc!="yes"}<b>{$lang.products.up}.</b>{else}<a href="{$page.url}?sort=caption{if $firm}&id_firm={$firm.id_firm}{/if}{if $coll}&id_collection={$coll.id_collection}{/if}{if type}&id_type={$type.id_type}{/if}">{$lang.products.up}.</a>{/if}&nbsp;{if $sort=="caption" && $desc=="yes"}<b>{$lang.products.down}.</b>{else}<a href="{$page.url}?sort=caption&desc=yes{if $firm}&id_firm={$firm.id_firm}{/if}{if $coll}&id_collection={$coll.id_collection}{/if}{if type}&id_type={$type.id_type}{/if}">{$lang.products.down}.</a>{/if})</p>
+{foreach key=key item=product from=$products}
+<div class="object_container">
+	<div class="object_picture">{if $product.picture.small_filename}<a href="{$siteurl}{$urls[$product.id_category]}?productID={$product.id_product}"><img src="{$user_thumbnails}{$product.picture.small_filename}" border="0" alt="{$page.caption}"></a>{/if}</div>
+	<div class="object_description">
+		<p><a href="{$siteurl}{$urls[$product.id_category]}?productID={$product.id_product}">{$product.caption}</a></p>
+		{if $product.code}
+		<p>{$lang.products.code}: <b>{$product.code}</b></p>
+		{/if}		
+		<p>{$lang.products.price}: {if $product.price2>0}<s>{$product.price2_print}</s>&nbsp;{/if}{$product.price_print}</p>
+		{$product.content}
+{if $shop_on}
+<form action="{$siteurl}{$bskt.basket_url}?m_action=add" method="post" encType="multipart/form-data">
+<input type="submit" value="{$lang.products.inbasket}" id="orderbtn">
+<input type="hidden" name="products[{$product.id_product}]" value="1">
+</form>
+{/if}	
+<form action="{$siteurl}{$current_lang}{$thismodule.favorite_url}" method="get" encType="multipart/form-data">
+<input type="submit" value="{$lang.products.addtofavorite}" id="favoritebtn">
+<input type="hidden" name="add" value="yes">
+<input type="hidden" name="id_product" value="{$product.id_product}">
+</form>	
+	</div>
+</div>
+{/foreach}
+<div style="width:100%;height:20px;float:left;">
+<p>
+{$lang.products.choosepage}:&nbsp;
+{if $pg>0}<a href="{if $pg==0}{$page.url}?sort={$sort}&desc={$desc}{else}{$page.url}?p={$pg-1}&sort={$sort}&desc={$desc}{/if}{if $firm}&id_firm={$firm.id_firm}{/if}{if $coll}&id_collection={$coll.id_collection}{/if}{if type}&id_type={$type.id_type}{/if}">{$lang.products.prev}{/if}
+{foreach key=key item=pg1 from=$pages}&nbsp;{if $pg1==$pg}<b>{$pg+1}</b>{else}<a href="{if $pg1==0}{$page.url}?sort={$sort}&desc={$desc}{else}{$page.url}?p={$pg1}&sort={$sort}&desc={$desc}{/if}{if $firm}&id_firm={$firm.id_firm}{/if}{if $coll}&id_collection={$coll.id_collection}{/if}{if type}&id_type={$type.id_type}{/if}">{$pg1+1}</a>{/if}{/foreach}
+{if $pg<$mp-1}&nbsp;<a href="{$page.url}?p={$pg+1}&sort={$sort}&desc={$desc}{if $firm}&id_firm={$firm.id_firm}{/if}{if $coll}&id_collection={$coll.id_collection}{/if}{if type}&id_type={$type.id_type}{/if}">{$lang.products.next}</a>{/if}
+</p>
+</div>
+{/if}
+{/if}
+{/if}

@@ -1,0 +1,19 @@
+{if $block.type.type=="lastobjects"}
+{foreach key=key item=obj from=$block_objects}
+	<div class="item">
+		<div class="item_date">{$obj.create_print}</div>
+		<div class="item_body">
+			<p class="zag">{if $obj.type.full_content}<a href="{$siteurl}{$urls[$obj.id_category]}?id_object={$obj.id_object}">{/if}{$obj.caption}{if $obj.type.full_content}</a>{/if}</p>
+			{if $obj.type.short_content}
+			<p>{$obj.small_content}</p>
+			{/if}
+		</div>							
+	</div>
+{/foreach}
+{elseif $block.type.type=="addobjects"}
+{foreach key=key item=typ from=$block_types}
+{if $typ.user_add}
+	<p><a href="{$siteurl}{$urls[$typ.add_cat]}?add=yes&id_type={$typ.id_type}">{$lang.objects.add_object}{if $typ.add_text} {$typ.add_text}{/if}</a></p>
+{/if}
+{/foreach}
+{/if}

@@ -1,0 +1,45 @@
+{if $full_view}
+<h2>{$news.date_print}</h2>
+{if $news.middle_preview}
+<img src="{$user_thumbnails}{$news.middle_preview}" border="0">
+{/if}
+{$news.content_full}
+
+{if $news.author}
+<p style="color:#bbbbbb;">{$lang.news.author}: {$news.author}</p>
+{/if}
+{if $news.url}
+<p style="color:#bbbbbb;"><a href="{$news.url}" target="_blank">{$lang.news.link}</a></p>
+{/if}
+{if $news.tags}
+<p>{$lang.news.tags}: {$news.tags}</p>
+{/if}
+<p><a href="{$page.url}"><< {$lang.news.backto}</a></p>
+{if $comments_install}
+{include file="admin/usermodules/comments/user_module.tpl.html"}
+{/if}
+{else}
+{if $news}
+{foreach key=key item=obj from=$news}
+<div class="object_container">
+	<div class="object_picture">{if $obj.small_preview}<a href="{$obj.full_url}"><img src="{$user_thumbnails}{$obj.small_preview}" border="0"></a>
+{/if}</div>
+	<div class="object_description">
+		<h3><span>{$obj.date_print}</span> <a href="{$obj.full_url}">{$obj.caption}</a></h3>
+<div class="small">
+{$obj.content}
+</div>
+{if $obj.content_full}
+<p><a href="{$obj.full_url}">{$lang.news.fulllink} >></a></p>
+{/if}		
+	</div>
+</div>
+{/foreach}
+<div style="width:100%;float:left;">
+<p class="choosepage">{$lang.news.choosepage}: {foreach key=key item=p from=$pages}{if $p==$pg}&nbsp;<b>{$p+1}</b>&nbsp;{else}&nbsp;<a href="{$page.url}{if $p>0}?p={$p}{/if}">{$p+1}</a>&nbsp;{/if}{/foreach}</p>
+</div>
+{else}
+<p>{$lang.news.notnews}</p>
+{/if}
+
+{/if}

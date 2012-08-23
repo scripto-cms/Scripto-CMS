@@ -1,0 +1,9 @@
+<ul>
+{foreach key=key item=position from=$categories}
+{foreach key=key item=category from=$position}
+ {if $category.caption}
+	<li style="padding-left: {math equation="x * y" x="7" y=$category.level}px;"> - <a href="javascript:void(0);" url="{$siteurl}admin/?module=modules&module_name=users&modAction=settings&m_action=dialogobject&id_user={$user.id_user}&ajax=yes&white=yes&id_category={$category.id_category}" targ="changepreviewlist" class="changelink{if $category.visible==0} nvisible{/if}{if $id_category==$category.id_category} active{/if}">{$category.caption}</a> [{if $category.objects}{$category.objects}{else}0{/if}]</li>
+ {/if}
+{/foreach}
+{/foreach}
+</ul>

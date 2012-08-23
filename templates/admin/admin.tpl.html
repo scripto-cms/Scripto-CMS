@@ -1,0 +1,323 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<META http-equiv="content-type" content="text/html; charset=windows-1251">
+	<title>Scripto CMS | {$admin_title}</title>
+	<script type="text/javascript" src="{$js}jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="{$js}fancybox/jquery.fancybox-1.3.1.pack.js"></script>
+	{if $doUpload}
+	<script src="{$js}ajaxupload.js" type="text/javascript"></script>	
+{literal}
+<script type= "text/javascript">/*<![CDATA[*/
+$(document).ready(function(){
+
+	var button = $('#button1'), interval;
+
+	$('#urldownload').click(function() {
+	var url=prompt('Укажите URL к файлу, который необходимо загрузить.');
+			if (url!='' && url!=null) {	
+			setLoadProcess('Скачиваю файл с URL ' + url);
+			showLoad('загрузка объектов');	
+			var idcat=$(this).attr("idcat");
+			var str_cat='';
+			if (idcat>0) {
+				str_cat='&id_cat=' + idcat;
+			}
+			$.post('/admin/?module=objects&modAction=geturl&url=' + url + str_cat, function(response, status, xhr) {
+			  if (status == "error") {
+			    var msg = "В процессе загрузки произошла ошибка: ";
+			    alert(msg + xhr.status + " " + xhr.statusText);
+				hideLoad();
+			 } else {
+			 	hideLoad();
+			 	switch(response) {
+					case 'error_download':
+						tooltip('Произошла ошибка','В процессе загрузки произошла ошибка! Невозможно загрузить файл с удаленного сервера, возможно загрузка файлов отключена у Вашего хостинг провайдера, либо сайт недоступен.',0);
+					break;
+					case 'url_error':
+						tooltip('Произошла ошибка','Вы неверно указали URL!',5000);
+					break;
+					case 'wrong_format':
+						tooltip('Произошла ошибка','Загружаемый формат файла не поддерживается!',0);
+					break;
+					default:
+						try {
+						var object = jQuery.parseJSON(response);
+						} catch(e) {};
+if (object==null) {
+						tooltip("Произошла ошибка","Возможно размер загружаемого файла  больше, чем максимально допустимый на сервере, либо при передаче файла произошла ошибка.",0);
+					} else {
+					tooltip("Файл загружен","Файл загружен успешно!",3000);					
+					switch (object.format) {
+						case "image":
+							var preview_src='{/literal}{$user_thumbnails}{literal}' + object.preview;
+						break;
+						case "video":
+							var preview_src='{/literal}{$img}{literal}admin/icons/video.png';
+						break;
+						case "music":
+							var preview_src='{/literal}{$img}{literal}admin/icons/audio.png';
+						break;
+						case "flash":
+							var preview_src='{/literal}{$img}{literal}admin/icons/flash.png';
+						break;
+					}
+					var s_object='<div class="preview" id="obj' + object.id_object + '"><div class="preview_picture" style="background:url(' + preview_src + ') center no-repeat;"><img src="{/literal}{$img}{literal}admin/blank.gif" border="0" width="120" height="130" alt="' + object.caption + '"></div><div class="preview_caption">' + object.caption + '</div><input type="hidden" name="objects[' + object.id_object + '" value="0" idobject="' + object.id_object + '"></div>';
+					$('.icons[type=' + object.format + ']').append(s_object);	
+					}										
+					break;
+				}
+			 }
+			 		 
+			});	
+			} else {
+				tooltip('Ошибка!','Вы не указали URL!',5000);
+			}
+	});		
+
+	new AjaxUpload(button,{
+		action: '{/literal}{$siteurl}{literal}index.php?user_module=upload&secretkey={/literal}{$secretkey}{literal}', 
+		name: 'photoupload',
+		onSubmit : function(file, ext){
+			// change button text, when user selects file			
+			button.text('Загрузка');
+			
+			// If you want to allow uploading only 1 file at time,
+			// you can disable upload button
+			this.disable();
+			
+			// Uploding -> Uploading. -> Uploading...
+			interval = window.setInterval(function(){
+				var text = button.text();
+				if (text.length < 13){
+					button.text(text + '.');					
+				} else {
+					button.text('Загрузка');				
+				}
+			}, 200);
+		},
+		onComplete: function(file, response){
+			button.text('Загрузить файл');
+						
+			window.clearInterval(interval);
+						
+			// enable upload button
+			this.enable();
+			
+			// add file to the list
+			switch (response) {
+				case 'error':
+					tooltip("Ошибка при загрузке файла","При загрузке файла произошла ошибка",3000);
+				break;
+				case 'wrong_format':
+					tooltip("Неверный формат файла","Загружаемый формат файла не поддерживается",3000);
+				break;
+				case 'wrong_name':
+					tooltip("Файл неверно назван","Загружаемые файлы должны быть названы латинскими буквами и цифрами, например s8934.jpg",3000);
+				break
+				default:
+					try {
+					var object = jQuery.parseJSON(response);
+					} catch(e) {};
+					if (object==null) {
+						tooltip("Произошла ошибка!","Возможно размер загружаемого файла " + file + " , больше чем максимально допустимый на сервере, либо при передаче файла произошла ошибка.",0);
+					} else {
+					tooltip("Файл загружен","Файл " + file + " загружен успешно!",3000);					
+					switch (object.format) {
+						case "image":
+							var preview_src='{/literal}{$user_thumbnails}{literal}' + object.preview;
+						break;
+						case "video":
+							var preview_src='{/literal}{$img}{literal}admin/icons/video.png';
+						break;
+						case "music":
+							var preview_src='{/literal}{$img}{literal}admin/icons/audio.png';
+						break;
+						case "flash":
+							var preview_src='{/literal}{$img}{literal}admin/icons/flash.png';
+						break;
+					}
+					var s_object='<div class="preview" id="obj' + object.id_object + '"><div class="preview_picture" style="background:url(' + preview_src + ') center no-repeat;"><img src="{/literal}{$img}{literal}admin/blank.gif" border="0" width="120" height="130" alt="' + object.caption + '"></div><div class="preview_caption">' + object.caption + '</div><input type="hidden" name="objects[' + object.id_object + ']" value="0" idobject="' + object.id_object + '"></div>';
+					$('.icons[type=' + object.format + ']').append(s_object);	
+					}				
+			}		
+		}
+	});
+}
+);
+/*]]>*/
+</script>
+{/literal}	
+	{/if}
+	{literal}
+	<script type="text/javascript">
+		function showStartupTooltips() {
+			{/literal}
+			{foreach key=key item=mess from=$congratulation}
+				tooltip('{$mess.caption}','{$mess.description}',{$mess.timeout});
+			{/foreach}
+			return true;
+			{literal}
+		}	
+	</script>
+	{/literal}	
+	<script type="text/javascript" src="{$js}core.js"></script>	
+	{if $doFiles}
+	<script src="{$js}ajaxupload.js" type="text/javascript"></script>	
+	{/if}
+	{foreach key=key item=j from=$adm_js}
+	<script type="text/javascript" src="{$j}"></script>
+	{/foreach}	
+	{if $page.ident=="templates"}
+	<script src="{$js}codemirror/js/codemirror.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="{$js}codemirror/css/docs.css" />
+	{literal}
+    <style type="text/css">
+      .CodeMirror-line-numbers {
+        width: 2.2em;
+        color: #aaa;
+        background-color: #eee;
+        text-align: right;
+        padding-right: .3em;
+        font-size: 10pt;
+        font-family: monospace;
+        padding-top: .4em;
+      }
+    </style>
+	{/literal}
+	{/if}
+
+	<link rel="stylesheet" href="{$siteurl}templates/{$config.admin.main_css}" type="text/css" />
+	<link rel="stylesheet" href="{$js}fancybox/jquery.fancybox-1.3.1.css" type="text/css" media="screen" />	
+
+</head>
+
+<body>
+<div id="load">
+	<div id="load_container">
+		<div id="loadwindow">
+			<div id="load_caption"></div>
+			<div id="load_message"></div>
+		</div>
+	</div>
+</div>
+<div id="tooltips">
+<div id="hidden_tooltip">
+	<div class="tooltip">
+		<div class="tooltip_mini">
+			<div class="tooltip_u up_left"></div>
+			<div class="tooltip_ubody"></div>
+			<div class="tooltip_u up_right"></div>
+		</div>
+		<div class="tooltip_body"></div>
+		<div class="tooltip_mini">
+			<div class="tooltip_u down_left"></div>
+			<div class="tooltip_ubody"></div>
+			<div class="tooltip_u down_right"></div>			
+		</div>
+	</div>
+</div>
+<div id="visible_tooltips"></div>
+</div>
+	<div id="logo"><a href="{$siteurl}admin" title="Scripto CMS | Система управления сайтом"><img src="{$admin_images}logo.gif" border="0" alt="Scripto CMS | Система управления сайтом"></a></div>
+	<div id="headerbar">
+		<table width="100%" cellpadding="0" cellspacing="0">
+			<tr>
+				<td width="50%">{$config.version} [<a href="http://scripto-cms.ru/updates" target="_blank">обновления</a> | <a href="http://scripto-cms.ru/support" target="_blank">техническая поддержка</a>]</td>
+				<td width="50%">
+					<div id="date"></div>				
+					<div id="time"></div>				
+					<div class="headerbar_icon"></div>					
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="infobar">
+		<div id="userinfo">
+			<table>
+				<tr>
+					<td width="15%" align="center"><img src="{$admin_images}userinfo.jpg" border="0"></td>
+					<td width="75%">{$user.login}</td>
+					<td width="10%" align="center"><a href="{$siteurl}admin?exit=yes" title="Завершить сеанс {$user.login}"><img src="{$admin_icons}logout.png" border="0" alt="Завершить сеанс {$user.login}"></a></td>
+				</tr>
+			</table>
+		</div>
+		<div id="horizontalmenu">
+			<div class="horizontalmenu_ugol"><img src="{$admin_images}horizontalmenu_left.jpg" border="0"></div>
+			<div id="horizontalmenu_main">
+				<ul>
+					<li class="separator_li"><a href="{$siteurl}" target="_blank">{$lang.interface.gotosite}</a></li>
+					{if $user.type=="root" || $user.permissions.standart.languages==true}<li class="separator_li">{if $admin_module=="languages"}{$lang.interface.languages}{else}<a href="{$siteurl}admin/?module=languages">{$lang.interface.languages}</a>{/if}</li>{/if}
+					{if $user.type=="root" || $user.permissions.standart.catalog==true}<li class="separator_li">{if $admin_module=="catalog"}{$lang.interface.catalog}{else}<a href="{$siteurl}admin/?module=catalog">{$lang.interface.catalog}</a>{/if}</li>{/if}
+					{if $user.type=="root" || $user.permissions.standart.modules==true}<li class="separator_li">{if $admin_module=="modules"}{$lang.interface.modules}{else}<a href="{$siteurl}admin/?module=modules">{$lang.interface.modules}</a>{/if}</li>{/if}
+					{if $user.type=="root" || $user.permissions.standart.blocks==true}<li class="separator_li">{if $admin_module=="blocks"}{$lang.interface.blocks}{else}<a href="{$siteurl}admin/?module=blocks">{$lang.interface.blocks}</a>{/if}</li>{/if}
+					{if $user.type=="root" || $user.permissions.standart.settings==true}<li class="separator_li">{if $admin_module=="settings"}{$lang.interface.settings}{else}<a href="{$siteurl}admin/?module=settings">{$lang.interface.settings}</a>{/if}</li>{/if}
+					{if $user.type=="root" || $user.permissions.standart.templates==true}<li>{if $admin_module=="templates"}{$lang.interface.templates}{else}<a href="{$siteurl}admin/?module=templates">{$lang.interface.templates}</a>{/if}</li>{/if}
+				</ul>
+			</div>
+			<div class="horizontalmenu_ugol"><img src="{$admin_images}horizontalmenu_right.jpg" border="0"></div>
+		</div>
+	</div>
+	<div id="content">
+		<div id="content_header">
+			<div id="content_header_left"><img src="{$admin_images}content_header_left.jpg" border="0"></div>
+			<div id="content_header_right"><img src="{$admin_images}content_header_right.jpg" border="0"></div>
+		</div>
+		<div id="modulecontainer">
+			<div id="module">
+			{if $page.is_error}
+			{if $denied}
+				<div class="body">
+					<h2>Доступ к модулю закрыт</h2>
+					<p>Вам необходимо связаться с администратором ресурса для предоставления Вам доступа.</p>
+				</div>
+			{else}
+			<table class="moduletable">
+				<tr>
+					<td class="module_single">
+							<div id="module_caption">
+								<table>
+									<tr>
+										<td width="5%" nowrap class="module_caption">Непредвиденная ошибка (модуль: {$page.title}.mod.php)</td>
+										<td width="55%" nowrap class="module_settings"></td>
+										<td width="40%" nowrap class="module_info"></td>
+									</tr>
+								</table>
+							</div>
+							<div class="body">
+								<p>{$page.content}</p>
+								<p><b>детальное описание:</b></p>
+								<p>{$page.help}</p>								
+							</div>					
+					</td>
+				</tr>
+			</table>
+			{/if}
+			{else}
+				{$page.content}
+			{/if}				
+			</div>
+			<div id="favoriteslist">
+				<ul>
+					{if $user.type=="root" || $user.permissions.standart.main==true}<li class="favorite{if $admin_module=="main"}_selected{/if}"><a href="{$siteurl}admin" title="{$lang.interface.main}"><img src="{$admin_icons}home.png" border="0" width="32" height="32"></a></li>{/if}
+					{if $user.type=="root" || $user.permissions.standart.catalog==true}<li class="favorite{if $admin_module=="catalog"}_selected{/if}"><a href="{$siteurl}admin?module=catalog" title="{$lang.interface.catalog}"><img src="{$admin_icons}menu.png" border="0" width="32" height="32"></a></li>{/if}
+					{if $user.type=="root" || $user.permissions.standart.objects==true}<li class="favorite{if $admin_module=="objects"}_selected{/if}" id="favorite_gallery"><a href="{$siteurl}admin?module=objects" title="{$lang.interface.objects}"><img src="{$admin_icons}gallery.png" border="0" width="32" height="32"></a><div class="favorite_reminder"></div></li>{/if}
+					{if $user.type=="root" || $user.permissions.standart.settings==true}<li class="favorite{if $admin_module=="settings"}_selected{/if}"><a href="{$siteurl}admin?module=settings" title="{$lang.interface.settings}"><img src="{$admin_icons}settings.png" border="0" width="32" height="32"></a></li>{/if}
+					{if $user.type=="root" || $user.permissions.standart.notes==true}<li class="favorite{if $admin_module=="notes"}_selected{/if}" id="favorite_notes"><a href="{$siteurl}admin?module=notes" title="{$lang.interface.notes}"><img src="{$admin_icons}notes.png" border="0" width="32" height="32"></a><div class="favorite_reminder"></div></li>{/if}
+					{foreach key=key item=mod from=$installed_modules}
+					{if $user.type=="root" || $user.permissions.additional[$mod.name]==true}
+					{if $mod.icon}
+					<li class="favorite{if $sub_module==$mod.name}_selected{/if}" id="favorite_{$mod.name}"><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name={$mod.name}" title="{$mod.caption}"><img src="{$admin_module_icon}icons/{$mod.icon}" border="0" width="32" height="32"></a><div class="favorite_reminder"></div></li>
+					{/if}
+					{/if}
+					{/foreach}
+				</ul>
+			</div>
+		</div>
+		<div id="content_header">
+			<div id="content_header_left"><img src="{$admin_images}content_header_left_down.jpg" border="0"></div>
+			<div id="content_header_right"><img src="{$admin_images}content_header_right_down.jpg" border="0"></div>
+		</div>		
+	</div>
+</body>
+</html>

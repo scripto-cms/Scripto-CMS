@@ -1,0 +1,82 @@
+<table width="100%">
+{if $comments}
+<tr>
+<td valign="top">
+<h2>{$lang.comments.caption}</h2>
+{foreach key=key item=comment from=$comments}
+<a name="comment{$comment.id_comment}"></a>
+	<div class="answer_box_me">
+		<div class="answer_from padding">
+			<b>{$comment.nickname}</b> {$lang.comments.wrote} {$comment.create_print}:
+		</div>
+		<div class="answer_content">{$comment.content}</div>
+		<div class="answer_from"></div>
+	</div>
+{/foreach}
+</td>
+</tr>
+{/if}
+<tr>
+<td valign="top">
+<h2>{$lang.comments.add}</h2>
+{if $comment_add}
+<p><b>{$lang.comments.congratulation}!</b></p>
+{else}
+{if !$tiny_mce}
+<script type="text/javascript" src="{$js}tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+{literal}
+tinyMCE.init({
+theme : "advanced",
+mode : "textareas",
+plugins : "bbcode,emotions",
+editor_selector : "bbcode_selector",
+theme_advanced_buttons1 : "bold,italic,underline,link,unlink,emotions",
+theme_advanced_buttons2 : "",
+theme_advanced_buttons3 : "",
+theme_advanced_toolbar_location : "bottom",
+theme_advanced_toolbar_align : "center",
+theme_advanced_styles : "Code=codeStyle;Quote=quoteStyle",
+entity_encoding : "raw",
+add_unload_trigger : false,
+remove_linebreaks : false,
+inline_styles : false,
+convert_fonts_to_spans : false
+});
+{/literal}
+</script>
+{/if}
+{if $kcaptha_error}
+<p>{$lang.comments.kcaptha_error}</p>
+{/if}
+<form action="" method="post">
+<table width="100%">
+	<tr>
+		<td width="25%">{$lang.comments.nickname}:</td>
+		<td width="75%">{if $authorized}<input type="hidden" name="nickname" value="{$user_login}"><b>{$user_login}</b>{else}<input type="text" style="width:100%;" value="{$user_login}" name="nickname">{/if}</td>
+	</tr>
+	<tr>
+		<td width="25%">{$lang.comments.comment}:</td>
+		<td width="75%"><textarea name="comment" style="width:100%;height:100px;" class="bbcode_selector">{$comment_text}</textarea></td>
+	</tr>
+	<tr>
+		<td>{$lang.comments.captcha}:</td>
+		<td><img src="{$config.classes.kcaptha}"><input type="text" class="textbox" size="8" name="kcaptha"></td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center">
+			<input type="submit" value="{$lang.comments.button}">
+			<input type="hidden" name="submit_comment" value="yes">
+			<input type="hidden" name="comment_type" value="{$comment_type}">
+			<input type="hidden" name="comment_object" value="{$object_id}">
+		</td>
+	</tr>
+</table>
+</form>
+<script>
+tinyMCE.execCommand('mceToggleEditor',false,'bbcode_selector');
+</script>
+{/if}
+</td>
+</tr>
+</table>

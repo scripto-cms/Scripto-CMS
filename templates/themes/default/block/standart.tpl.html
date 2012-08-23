@@ -1,0 +1,35 @@
+{if $block.content}
+{$block.content}
+{/if}
+{if $module_block}
+{$module_block}
+{/if}
+{if $block.type.type=="texts" || $block.type.type=="random"}
+{foreach key=key item=obj from=$block_objects}
+{$obj.content}
+{/foreach}
+{/if}
+{if $block.type.type=="random_photo"}
+{foreach key=key item=img from=$block_objects}
+<a href="{$siteurl}{$urls[$img.id_category]}?photo_id={$img.id_photo}"><img src="{$user_thumbnails}{$img.small_photo}" alt="{$img.caption}"></a>
+{/foreach}
+{/if}
+{if $block.type.type=="random_video"}
+{foreach key=key item=img from=$block_objects}
+<a href="{$img.rubric.url}?photo_id={$img.id_photo}"><img src="{$user_thumbnails}{$img.small_photo}" alt="{$img.caption}"></a>
+{/foreach}
+{/if}
+{if $block.type.type=="random_audio"}
+{foreach key=key item=img from=$block_objects}
+<a href="{$img.rubric.url}?photo_id={$img.id_photo}"><img src="{$user_thumbnails}{$img.small_photo}" alt="{$img.caption}"></a>
+{/foreach}
+{/if}
+{if $block.type.type=="rss"}
+{foreach key=key item=obj from=$block_objects}
+<p><b>{$obj.rss_caption}</b></p>
+  {foreach key=key item=rss from=$obj.links}
+    <p style="padding-top:5px;padding-bottom:5px;"><a href="{$rss.link}" target="_blank">{$rss.title}</a></p>
+  {/foreach}
+{/foreach}
+{/if}
+

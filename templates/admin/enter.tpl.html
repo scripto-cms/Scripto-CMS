@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<META http-equiv="content-type" content="text/html; charset=windows-1251">
+	{if $user.status==2}
+	<title>Scripto CMS | Главная страница аминистративного интерфейса</title>
+	{else}
+	<title>Вход в административный интерфейс Scripto CMS</title>
+	{/if}
+	<script src="{$js}scripto_gallery.js" type="text/javascript"></script>
+	<script src="{$js}lightwindow/javascript/prototype.js" type="text/javascript"></script>
+	<script src="{$js}lightwindow/javascript/scriptaculous.js" type="text/javascript"></script>
+	<script src="{$js}lightwindow/javascript/lightwindow.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="{$js}lightwindow/css/lightwindow.css" type="text/css" media="screen" />	
+	<style>
+		{$css}
+	</style>
+</head>
+
+<body>
+
+	<div id="sideleft">
+	{if $user.status==2}
+	<p style="padding-left:18px;padding-top:20px;">главное меню:</p>
+		<div id="control">
+		 <ul>
+		 	<li><a href="{$siteurl}admin/?module=modules">{$lang.interface.modules}</a></li>
+			<li><a href="{$siteurl}admin/?module=blocks">{$lang.interface.blocks}</a></li> 
+			<li><a href="{$siteurl}admin/?module=objects">{$lang.interface.objects}</a></li>
+			<li><a href="{$siteurl}admin/?module=catalog">{$lang.interface.catalog}</a></li>
+			<li><a href="{$siteurl}admin/?module=settings">{$lang.interface.settings}</a></li>
+			<li><a href="{$siteurl}admin/?module=templates">{$lang.interface.templates}</a></li>
+			<li><a href="javascript:void(0);" onclick="YesNo('{$lang.dialog.exit}','{$siteurl}admin/?exit=yes');">{$lang.interface.exit}</a></li>
+		 </ul>
+		</div>	
+	{/if}
+	</div>
+	{if $user.status!=2}
+	<div id="sideright">
+		<div id="logo"><a href="http://www.photoscript.ru" target="_blank"><img src="{$img}admin/logo_splash.jpg" border="0"></a></div>
+		{if $user.status==1}
+			<div id="errorbox">{$lang.interface.not_correct_admin}</div>
+		{/if}
+		<div id="enter">
+		<form action="{$siteurl}admin" method="post">
+			<table width="344" height="95" cellpadding="0" cellspacing="0">
+				<tr height="46">
+					<td width="20%" align="right">Ваш логин</td>
+					<td width="50%" align="center"><input type="text" name="login" class="textbox" tabindex="1"></td>
+					<td width="30%" align="center" rowspan="2"><input type="image" src="{$img}admin/splashscreen/enter_btn.jpg" tabindex="3"></td>					
+				</tr>
+				<tr height="45">
+					<td width="20%" align="right">Ваш пароль</td>
+					<td width="50%" align="center"><input type="password" name="password" class="textbox" tabindex="2"></td>
+				</tr>
+			</table>
+		</form>
+		</div>
+		<div id="partners">
+			<table width="344">
+				<tr>
+					<td width="174"></td>
+					<td width="90"><a href="http://www.smarty.net" target="_blank"><img src="{$img}admin/splashscreen/smarty_icon.jpg" border="0"></a></td>
+					<td width="90"><a href="http://www.mysql.com" target="_blank"><img src="{$img}admin/splashscreen/mysql_icon.jpg" border="0"></a></td>
+					<td width="90"><a href="http://www.php.net" target="_blank"><img src="{$img}admin/splashscreen/php_icon.jpg" border="0"></a></td>
+				</tr>
+			</table>
+		</div>
+		<div id="about">
+			Система управления сайтом <a href="http://www.scripto-cms.ru/" target="_blank">Scripto CMS</a><br>
+			Техническая поддержка: <a href="mailto:support@scripto-cms.ru">support@scripto-cms.ru</a><br>
+			Copyright &copy; 2007-2011.
+		</div>
+	</div>
+	{/if}
+</body>
+</html>

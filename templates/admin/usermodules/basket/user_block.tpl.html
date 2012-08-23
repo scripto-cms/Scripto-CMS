@@ -1,0 +1,11 @@
+{if $basket}
+{if $basket.count>0}
+<p>{$lang.basket.inbasket}<b>{$basket.count}</b>{$lang.basket.ontotal}<b>{$basket.itogo}</b></p>
+<p><a href="{$siteurl}{$current_lang}{$thismodule.basket_url}">{$lang.basket.gotobasket}</a></p>
+<p><a href="{$siteurl}{$current_lang}{$thismodule.order_url}">{$lang.basket.order}</a></p>
+{else}
+<p>{$lang.basket.empty}</p>
+{/if}
+{else}
+<p>{$lang.basket.empty}</p>
+{/if}

@@ -1,0 +1,30 @@
+{if $block.type.type=="products" || $block.type.type=="products_random" || $block.type.type=="products_leaders" || $block.type.type=="products_actions"}
+{if $block_products}
+{foreach key=key item=blockproduct from=$block_products}
+<p style="padding-top:10px;"><b><a href="{$blockproduct.product_url}?productID={$blockproduct.id_product}">{$blockproduct.caption}</a></b></p>
+<p>{$blockproduct.content}</p>
+<p>{$lang.products.price} {$blockproduct.price1} руб.</p>
+{/foreach}
+{if $block.type.type=="products_actions"}
+	<p><a href="{$siteurl}{$urls[$block_action.id_category]}">{$lang.products.allspec}</a></p>
+{/if}
+{/if}
+{elseif $block.type.type=="products_compare"}
+	{if $favorite_count>0}
+	<p><a href="{$siteurl}{$current_lang}{$thismodule.favorite_url}">{$lang.products.favorite_products} ({$favorite_count})</a></p>
+	{else}
+	<p>{$lang.products.no_favorite}</p>
+	{/if}
+{elseif $block.type.type=="products_firms"}
+{if $block_firms}
+	{foreach key=key item=bfirm from=$block_firms}
+		<p><a href="{$siteurl}{$current_lang}{$thismodule.brand_url}?id_firm={$bfirm.id_firm}">{$bfirm.caption}</a></p>
+	{/foreach}
+{/if}
+{elseif $block.type.type=="products_types"}
+{if $block_types}
+	{foreach key=key item=btype from=$block_types}
+		<p><a href="{$siteurl}{$current_lang}{$thismodule.type_url}?id_type={$btype.id_type}">{$btype.caption}</a></p>
+	{/foreach}
+{/if}
+{/if}

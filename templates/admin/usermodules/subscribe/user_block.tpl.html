@@ -1,0 +1,19 @@
+{if $email_add}
+<script>alert('{$lang.subscribe.email_add}');</script>
+{/if}
+{if $email_exist}
+<script>alert('{$lang.subscribe.email_exist}');</script>
+{/if}
+{if $email_error}
+<script>alert('{$lang.subscribe.email_error}');</script>
+{/if}
+<form action="" method="post">
+<p><b>{$lang.subscribe.email}</b></p>
+<p><input type="text" class="input_textbox" name="email" value=""></p>
+{if $thismodule.use_name}
+<p><b>{$lang.subscribe.name}</b></p>
+<p><input type="text" class="input_textbox" name="name" value=""></p>
+{/if}
+<p><input type="submit" value="{$lang.subscribe.subscribe}"></p>
+<input type="hidden" name="addnew" value="yes">
+</form>

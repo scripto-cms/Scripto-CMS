@@ -1,0 +1,28 @@
+{if $objects}
+{foreach key=key item=object from=$objects}
+<div class="object_container">
+	<div class="object_picture">{if $object.url}<a href="{$object.url}" title="{$obj.caption}">{/if}<img src="{$user_thumbnails}{$obj.small_preview}" alt="{$obj.caption}">{if $object.url}</a>{/if}</div>
+	<div class="object_description">
+		<h3>{if $object.url}<a href="{$object.url}" title="{$obj.caption}">{/if}{$object.caption}{if $object.url}</a>{/if}</h3>
+		{$object.description}
+	</div>
+</div>
+{/foreach}
+	<p>
+	{$lang.tags.choose}:
+		{foreach key=key item=p from=$pages}
+			{if $p==$pagenumber}
+				<b>{$p+1}</b>
+			{else}
+				{if $p==0}
+					<a href="{$page.url}?t={$tag}">{$p+1}</a>
+				{else}
+					<a href="{$page.url}?p={$p}&t={$tag}">{$p+1}</a>
+				{/if}
+			{/if}
+			&nbsp;
+		{/foreach}
+	</p>
+{else}
+<p>{$lang.tags.notfound}</p>
+{/if}

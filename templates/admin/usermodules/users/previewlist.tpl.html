@@ -1,0 +1,19 @@
+{if $id_category}
+{if $objects>0}
+<div class="icons" type="objects">
+{foreach key=key item=object from=$objects}
+<div class="preview" id="obj{$object.id_object}">
+	<div class="preview_picture" style="background:url('{if $object.small_preview}{$user_thumbnails}{$object.small_preview}{else}{$img}admin/icons/obj.png{/if}') center no-repeat;"><img src="{$img}admin/blank.gif" border="0" width="120" height="130" alt="{$object.caption}"></div>
+	<div class="preview_caption">{$object.caption|truncate:17:"..."}</div>
+	<input type="hidden" name="objects[{$object.id_object}]" value="0" idobject="{$object.id_object}">
+</div>
+{/foreach}
+</div>
+{else}
+<div class="body" id="clear">
+<p>В данном разделе нет ни одного объекта</p>
+</div>
+{/if}
+{else}
+<p>Пожалуйста выберите раздел слева</p>
+{/if}

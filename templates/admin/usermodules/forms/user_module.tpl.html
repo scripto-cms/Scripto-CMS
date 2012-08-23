@@ -1,0 +1,55 @@
+{if $answer_mode}
+{if $mode=='user' || $mode=='admin'}
+	{if $order.fio}<p>Отправитель: {$order.fio}</p>{/if}
+	{if $order.email}<p>E-mail отправителя: <a href="mailto:{$order.email}">{$order.email}</a></p>{/if}
+	<h2>Полученные ранее сообщения</h2>
+<div class="answers">
+	<div class="answer_box_user">
+		<div class="answer_from padding">
+			{if $order.fio}{$order.fio}{/if} {if $order.email}(<a href="mailto:{$order.email}">{$order.email}</a>){/if} писал {$order.create_print}:
+		</div>
+		<div class="answer_content">{$order.content}</div>
+		<div class="answer_from">IP записан: {$order.ip}</div>
+	</div>
+	{if $answers}
+	{foreach key=key item=answer from=$answers}
+		{if $answer.is_admin==1}
+	<div class="answer_box_me">
+		<div class="answer_from padding">
+			<b>Администратор</b> писал {$answer.create_print}:
+		</div>
+		<div class="answer_content">{$answer.forwardtext}</div>
+		<div class="answer_from">IP записан: {$answer.ip}</div>
+	</div>		
+		{else}
+	<div class="answer_box_user">
+		<div class="answer_from padding">
+			{if $order.fio}{$order.fio}{/if} {if $order.email}(<a href="mailto:{$order.email}">{$order.email}</a>){/if} писал {$answer.create_print}:
+		</div>
+		<div class="answer_content">{$answer.forwardtext}</div>
+		<div class="answer_from">IP записан: {$answer.ip}</div>
+	</div>		
+		{/if}
+	{/foreach}
+	{/if}
+</div>
+<div class="answer_form">
+<h2>Отправить ответ</h2>
+{if $save}
+<h2>Ответ на заявку был успешно отправлен</h2>
+{/if}
+{$form_html}
+</div>	
+{else}
+<p><b>Внимание! Указан неверный ключ!</b></p>
+{/if}
+{else}
+	{if $form_send}
+		<h2>{$lang.forms.sended}</h2>
+		<p>{$lang.forms.number}: <b>{$number}</b></p>
+		<p>{$lang.forms.data}:</p>
+		{$form_html}
+	{else}
+		{$form_html}
+	{/if}
+{/if}

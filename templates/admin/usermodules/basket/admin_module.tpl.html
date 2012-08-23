@@ -1,0 +1,391 @@
+{if $products_not_install || $users_not_install}
+<p><b>Внимание! Для функционирования модуля интернет магазин обязательно необходимы установленные модули товары и пользователи!</b></p>
+{else}
+{if $m_action=="view_order"}
+{if $order}
+<h1>Информация о заказе #{$order.id_order}</h1>
+<p>Дата заказа: <b>{$order.date_print}</b></p>
+<p>Общая стоимость заказа: <b>{if $order.print_coupon_itogo}{$order.print_coupon_itogo}{else}{$order.print_price}{/if}</b></p>
+<p>Способ доставки: <b>{if $order.delivery}{$order.delivery}{else}не указано{/if}</b></p>
+<p>Адрес доставки: <b>{if $order.address}{$order.address}{else}не указано{/if}</b></p>
+<p>Способ оплаты: <b>{if $order.payment}{$order.payment}{else}не указано{/if}</b></p>
+{if $order.comment}
+<p>Комментарий к заказу:<br>{$order.comment}</p>
+{/if}
+<h1>Информация о заказчике</h1>
+<p>ФИО: <b>{$user.fio}</b></p>
+<p>E-mail: <a href="mailto:{$user.email}">{$user.email}</a></p>
+<p>Городской телефон: {if $user.phone1}<b>{$user.phone1}</b>{else}не указан{/if}</p>
+<p>Сотовый телефон: {if $user.phone2}<b>{$user.phone2}</b>{else}не указан{/if}</p>
+<h1>Заказанные товары</h1>
+<table class="objects">
+<tr height="30">
+	<td width="25%" class="objects_header">Код товара</td>
+	<td width="25%" class="objects_header">Название</td>
+	<td width="15%" class="objects_header">Количество</td>
+	<td width="15%" class="objects_header">Стоимость</td>
+	<td width="20%" class="objects_header">Итого</td>
+</tr>
+{foreach key=key item=prod from=$order.products}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="order{$ord.id_order}">
+	<td>{$prod.code}</td>
+	<td>{$prod.caption}
+	{if $prod.options}
+	<p><b>Заказанные варианты товара:</b></p>
+	{foreach key=key item=option from=$prod.options}
+	{assign var="n" value=0}
+	<p>
+		{foreach key=key2 item=value from=$option}
+			{if $n==0}
+				<b>{$value}</b>:<br>
+			{/if}
+			{$key2}<br>
+			{assign var="n" value=$n+1}
+		{/foreach}
+	</p>
+	{/foreach}
+	{/if}
+	</td>
+	<td>{$prod.count}</td>
+	<td>{$prod.print_price}</td>
+	<td align="right">{$prod.print_itogo}</td>
+</tr>
+{/foreach}
+<tr>
+	<td colspan="4" align="right"><b>Итого с доставкой:</b></td>
+	<td align="right"><b>{$order.print_price}</b></td>
+</tr>
+{if $order.print_coupon}
+<tr>
+	<td colspan="4" align="right">Скидочный купон {$order.coupon_caption} ({$order.coupon_code})</td>
+	<td align="right">- {$order.coupon_price} {if $order.coupon_type==0}руб.{/if}{if $order.coupon_type==1}%{/if}</td>
+</tr>
+<tr>
+	<td colspan="4" align="right"><b>Итого к оплате:</b></td>
+	<td align="right"><b>{$order.print_coupon_itogo}</b></td>
+</tr>
+{/if}
+{if $order.print_discount_price}
+<tr height="20">
+	<td colspan="4" align="right">{$lang.users.discount_value} {$order.discount_caption}</td>
+	<td align="right">- {$order.print_discount_price}</td>
+</tr>
+<tr height="20">
+	<td colspan="4" align="right"><b>{$lang.users.itogo_delivery}:</b></td>
+	<td align="right"><b>{$order.print_discount_itog}</b></td>
+</tr>
+{/if}
+</table>
+<p align="center"><input type="button" class="bigbutton" value="Распечатать заказ" onclick="javascript:print();"></p>
+{else}
+<p>Информация о заказе не найдена</p>
+{/if}
+{else}
+			<table class="moduletable">
+				<tr>
+					<td class="module_left">
+{if $users_install}
+{if $m_action=="clients" || $m_action=="register"}
+<p><b>Клиенты</b></p>
+{else}
+<p><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=users" target="_blank">Клиенты</a></p>
+{/if}
+{/if}
+{if $m_action=="orders"}
+<p><b>Заказы</b></p>
+{else}
+<p><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=orders">Заказы</a></p>
+{/if}
+{if $m_action=="delivery" || $m_action=="add_delivery"}
+<p><b>Способы доставки</b></p>
+{else}
+<p><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=delivery">Способы доставки</a></p>
+{/if}
+{if $m_action=="payment" || $m_action=="add_payment"}
+<p><b>Способы оплаты</b></p>
+{else}
+<p><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=payment">Способы оплаты</a></p>
+{/if}
+{if $m_action=="discounts" || $m_action=="add_discount"}
+<p><b>Скидочные купоны</b></p>
+{else}
+<p><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=discounts">Скидочные купоны</a></p>
+{/if}
+{if $m_action=="opt"}
+<p><b>Оптовые скидки</b></p>
+{else}
+<p><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=opt">Оптовые скидки</a></p>
+{/if}
+{if $m_action=="top"}
+<p><b>50 Самыx продаваемых товаров</b></p>
+{else}
+<p><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=top">50 Самыx продаваемых товаров</a></p>
+{/if}
+</td>
+<td class="module_right">
+<div class="body">
+{if $m_action==""}
+<p>Выберите необходимый пункт меню слева</p>
+{/if}
+{if $m_action=="discounts"}
+<h2>Скидочные купоны</h2>
+<div class="body">
+<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=add_discount');">Добавить</div>
+</div>
+{if $discount}
+<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=basket&m_action=discounts&savediscounts=yes" method="post" id="discount_form">
+<div class="body">
+<table class="objects">
+<tr height="30">
+	<td width="30%" class="objects_header">Название</td>
+	<td width="15%" class="objects_header">Код</td>
+	<td width="30%" class="objects_header">Скидка</td>
+	<td width="5%" class="objects_header editable_header"><span>Активный</span></td>
+	<td width="10%" class="objects_header" align="right">Операции</td>
+</tr>
+{foreach key=key item=disc from=$discount}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="discounts{$disc.id_discount}">
+	<td>{$disc.caption}</td>
+	<td>{$disc.code|upper}</td>
+	<td>{$disc.price} {if $disc.type==0}Руб.{else}%{/if}</td>
+	<td align="center"><input type="checkbox" name="active[{$disc.id_discount}]" class="checkbox" numb="0" {if $disc.active} checked{/if}></td>
+	<td class="actions" align="right">
+		<ul>	
+			<li><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=add_discount&mode=edit&id_discount={$disc.id_discount}" title="Редактировать скидочный купон {$disc.caption}"><img src="{$img}admin/icons/edit.gif" alt="Редактировать скидочный купон {$disc.caption}"></a></li>
+			<li><a href="javascript:void(0);" onclick="YesNo('Удалить скидочный купон {$disc.caption}?','{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=delete_discount&id_discount={$disc.id_discount}');" title="Удалить скидочный купон {$disc.caption}"><img src="{$img}admin/icons/delete.gif" alt="Удалить скидочный купон {$disc.caption}"></a></li>
+		</ul>		
+	</td>
+</tr>
+<input type="hidden" name="iddisc[{$disc.id_discount}]" value="{$disc.id_discount}">
+{/foreach}
+<tr>
+	<td colspan="3"></td>
+	<td class="selectall" align="center"><input type="checkbox" class="checkbox" numb="0"></td>
+</tr>
+<tr id="save_submit">
+	<td colspan="4" align="center"><input type="submit" value="Сохранить" class="button"></td>
+</tr>
+</table>
+</div>
+</form>
+{else}
+<p>Вы не добавили ни одного скидочного купона</p>
+{/if}
+</div>
+{elseif $m_action=="top"}
+<div class="body">
+<h2>50 самых продаваемых товаров</h2>
+<table class="objects">
+<tr>
+	<td width="10%" class="objects_header">Изображение</td>
+	<td width="40%" class="objects_header">Название товара</td>
+	<td width="20%" class="objects_header">Количество продаж</td>
+	<td width="15%" class="objects_header">Стоимость</td>
+	<td width="15%" class="objects_header">Код товара</td>
+</tr>
+{assign var="k" value=0}
+{foreach key=key item=product from=$products}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="prod{$product.id_product}">
+					<td align="center">
+							{if $product.picture.small_filename!=''}
+								<img src="{$user_thumbnails}{$product.picture.small_filename}" class="imgpreview">
+							{/if}
+					</td>
+					<td><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=add&modAction=settings&id_product={$product.id_product}&mode=edit" target="_blank">{$product.caption}</a></td>
+					<td align="center">{$product.buy}</td>
+					<td>{$product.print_price}</td>
+					<td>{$product.code}</td>
+{/foreach}
+</table>						
+</div>						
+{elseif $m_action=="opt"}
+<div class="body">
+	<p>Оптовые скидки действуют при единовременном заказе товаров пользователем больше чем на указанные пороги, например можно указать, что при единовременном заказе более 10 000 пользователь может иметь право на скидку 5%.</p>
+	<h2>Добавить оптовую скидку</h2>
+	<div class="body">
+	<form action="" method="post">
+	<table width="550">
+		<tr>
+			<td width="18%">При заказе от:</td>
+			<td width="18%"><input type="text" name="from" value="" class="textbox"></td>
+			<td width="6%" align="center">руб.</td>
+			<td width="27%" align="center">предоставлять скидку</td>
+			<td width="6%"><input type="text" name="percent" value="" maxlength="2" class="textbox"></td>
+			<td width="5%" align="center">%</td>
+			<td width="20%" class="bigbutton"><input type="submit" value="добавить"></td>
+		</tr>
+	</table>
+	<input type="hidden" name="addnew" value="1">
+	</form>
+	</div>
+	<div class="body">
+	<h2>Оптовые скидки</h2>
+	{if $opts}
+	<form action="" method="post">
+	<table class="objects">
+	<tr height="30">
+		<td width="30%" class="objects_header">Сумма заказа больше чем</td>
+		<td width="30%" class="objects_header editable_header"><span>Предоставляемая скидка</span></td>
+		<td width="20%" class="objects_header editable_header"><span>Активная скидка</span></td>
+		<td width="20%" class="objects_header" align="right">Операции</td>
+	</tr>
+	{foreach key=key item=op from=$opts}
+	<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="opt{$op.id_opt}">
+		<td>{$op.print}</td>
+		<td class="editable"><span>{$op.percent}%</span><input type="text" name="percent[{$op.id_opt}]" maxlength="2" value="{$op.percent}" class="nonvisible"></td>
+		<td align="center"><input type="checkbox" numb="0" class="checkbox" name="active[{$op.id_opt}]"{if $op.active} checked{/if}></td>
+		<td class="actions" align="right">
+			<ul>	
+				<li><a href="javascript:void(0);" onclick="YesNo('Удалить оптовую скидку с порогом {$op.print}?','{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=opt&id_opt={$op.id_opt}&delete=1');" title="Удалить оптовую скидку с порогом {$op.print}"><img src="{$img}admin/icons/delete.gif" alt="Удалить оптовую скидку с порогом {$op.print}"></a></li>
+			</ul>		
+		</td>
+	</tr>
+	{/foreach}
+	<tr>
+		<td colspan="2"></td>
+		<td class="selectall" align="center"><input type="checkbox" numb="0"></td>
+		<td></td>
+	</tr>
+	<tr id="save_submit">
+		<td colspan="4" align="center"><input type="submit" value="Сохранить" class="button"></td>
+	</tr>	
+	</table>
+	<input type="hidden" name="save" value="1">
+	</form>
+	{else}
+	<p>Вы не добавили ни одной оптовой скидки</p>
+	{/if}	
+	</div>
+</div>
+{elseif $m_action=="orders"}	
+<h2>Просмотр заказов</h2>
+<div class="body">
+	<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=basket" method="post" id="search_form">
+		<div id="searchbox"><table><tr><td width="90%"><input type="text" name="str" value="{$str}" class="sbox"></td><td><input type="image" src="{$siteurl}images/admin/s_icon.jpg"></td></tr></table></div>
+		<div id="additionalbox_big"><table><tr><td><select name="id_user"><option value="0"{if !$id_user} selected{/if}>Любой пользователь</option>{foreach key=key item=us from=$users}<option value="{$us.id_user}"{if $id_user==$us.id_user} selected{/if}>{$us.fio} [{$us.login}]</option>{/foreach}</select></td></tr></table></div>
+		<input type="hidden" name="m_action" value="orders">
+	</form>
+</div>
+{if $orders}
+<p align="right">
+Выберите страницу:
+{foreach key=key item=p from=$pages}
+	{if $p==$pagenumber}
+		<b>{$p+1}</b>
+	{else}
+		<a href="{$siteurl}admin/?module=modules&module_name=basket&modAction=settings&m_action=orders&p={$p}{if $with_user!=''}&id_user={$id_user}{/if}{if $str}&str={$str_url}{/if}">{$p+1}</a>
+	{/if}
+	&nbsp;
+{/foreach}
+</p>
+<table class="objects">
+<tr height="30">
+	<td width="5%" class="objects_header">№</td>
+	<td width="25%" class="objects_header">ФИО Клиента</td>
+	<td width="15%" class="objects_header">Телефон клиента</td>
+	<td width="15%" class="objects_header">E-mail клиента</td>
+	<td width="15%" class="objects_header">Дата заказа</td>
+	<td width="15%" class="objects_header">Сумма заказа</td>
+	<td width="10%" class="objects_header" align="right">Операции</td>
+</tr>
+{foreach key=key item=ord from=$orders}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="order{$ord.id_order}">
+	<td align="center">{if $ord.view==1}<b>{$ord.id_order}</b>{else}{$ord.id_order}{/if}</td>
+	<td>{if $users_install}<a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=users&m_action=register&mode=edit&id_user={$ord.id_user}" target="_blank" title="Редактировать информацию о пользователе">{/if}{$ord.fio}{if $users_install}</a>{/if}</td>
+	<td>{if $ord.phone1}{$ord.phone1}<br>{/if}{$ord.phone2}</td>
+	<td><a href="mailto:{$ord.email}">{$ord.email}</a></td>
+	<td>{$ord.date_print}</td>
+	<td>{$ord.itogo_print}</td>
+	<td class="actions" align="right">
+		<ul>
+			<li><a href="{$siteurl}admin/?module=modules&module_name=basket&m_action=view_order&modAction=settings&id_order={$ord.id_order}&ajax=yes" class="dialog" title="Просмотреть информацию о заказе"><img src="{$img}admin/icons/basket/view_order.png" alt="Просмотреть информацию о заказе"></a></li>
+			<li><a href="{$siteurl}admin/?module=modules&module_name=basket&m_action=orders&modAction=settings&id_user={$ord.id_user}" title="Найти все заказы пользователя"><img src="{$img}admin/icons/basket/user_order.png" alt="Найти все заказы пользователя"></a></li>
+		</ul>
+	</td>
+</tr>
+{/foreach}
+</table>
+{else}
+{if $str}
+<p>Заказы с заданными условиями поиска не найдены</p>
+{else}
+<p>В Ваш магазин еще не поступало ни одного заказа</p>
+{/if}
+{/if}
+{elseif $m_action=="add_discount"}
+	{if !$message}
+	{$form_html}
+	{/if}
+{elseif $m_action=="add_delivery"}
+	{if !$message}
+	{$form_html}
+	{/if}
+{elseif $m_action=="add_payment"}
+	{if !$message}
+	{$form_html}
+	{/if}
+{elseif $m_action=="payment"}
+<h2>Способы оплаты</h2>
+<div class="body">
+<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=add_payment');">Добавить</p>
+</div>
+<div class="body">
+{if $payment}
+<table class="objects">
+<tr height="30">
+	<td width="90%" class="objects_header">Название</td>
+	<td width="10%" class="objects_header" align="right">Операции</td>
+</tr>
+{foreach key=key item=paym from=$payment}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="payment{$paym.id_payment}">
+	<td>{$paym.caption}</td>
+	<td class="actions" align="right">
+		<ul>	
+			<li><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=add_payment&mode=edit&id_payment={$paym.id_payment}" title="Редактировать способ оплаты {$paym.caption}"><img src="{$img}admin/icons/edit.gif" alt="Редактировать способ оплаты {$paym.caption}"></a></li>
+			<li><a href="javascript:void(0);" onclick="YesNo('Удалить способ оплаты {$paym.caption}?','{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=delete_payment&id_payment={$paym.id_payment}');" title="Удалить способ оплаты {$paym.caption}"><img src="{$img}admin/icons/delete.gif" alt="Удалить способ оплаты {$paym.caption}"></a></li>
+		</ul>		
+	</td>
+</tr>
+{/foreach}
+</table>
+{else}
+<p>Вы не добавили ни одного способа оплаты</p>
+{/if}
+</div>
+{elseif $m_action=="delivery"}
+<h2>Способы доставки</h2>
+<div class="body">
+<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=add_delivery');">Добавить</p>
+</div>
+<div class="body">
+{if $delivery}
+<table class="objects">
+<tr>
+	<td width="45%" class="objects_header">Название</td>
+	<td width="45%" class="objects_header">Стоимость</td>
+	<td width="10%" class="objects_header" align="right">Операции</td>
+</tr>
+{foreach key=key item=deliv from=$delivery}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="delivery{$deliv.id_delivery}">
+	<td>{$deliv.caption}</td>
+	<td>{$deliv.price}</td>
+	<td class="actions" align="right">
+		<ul>	
+			<li><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=add_delivery&mode=edit&id_delivery={$deliv.id_delivery}" title="Редактировать способ доставки {$deliv.caption}"><img src="{$img}admin/icons/edit.gif" alt="Редактировать способ доставки {$deliv.caption}"></a></li>
+			<li><a href="javascript:void(0);" title="Удалить способ доставки {$deliv.caption}" onclick="YesNo('Удалить способ доставки {$deliv.caption}?','{$siteurl}admin/?module=modules&modAction=settings&module_name=basket&m_action=delete_delivery&id_delivery={$deliv.id_delivery}');"><img src="{$img}admin/icons/delete.gif" alt="Удалить способ доставки {$deliv.caption}"></a></li>
+		</ul>		
+	</td>
+</tr>
+{/foreach}
+</table>
+{else}
+<p>Вы не добавили ни одного способа доставки</p>
+{/if}
+</div>
+{/if}
+</div>
+</td>
+</tr>
+</table>
+{/if}
+{/if}

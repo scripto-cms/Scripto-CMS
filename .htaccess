@@ -1,0 +1,9 @@
+DirectoryIndex index.php
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  RewriteCond %{HTTP_HOST} ^www.(.*)$
+  RewriteRule ^(.*)$ http://%1/$1 [R=301,L]  
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-l
+  RewriteRule ^(.*)$ index.php?id_rubric=$1 [L,QSA]
+</IfModule>

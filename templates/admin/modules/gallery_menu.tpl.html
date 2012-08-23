@@ -1,0 +1,23 @@
+{if $modAction=="seenew"}
+<ul>
+{include file="admin/modules/print_gallery.tpl" categories=$categories mode="seenew" idcat=0 visible=true}
+</ul>
+{elseif $modAction=="edit"}
+<ul>
+{include file="admin/modules/print_gallery.tpl" categories=$categories mode="edit" idcat=0 visible=true}
+</ul>
+{elseif $modAction=="changepreview"}
+<ul>
+{foreach key=key item=category from=$categories}
+ {if $category.caption}
+	<li style="padding-left: {math equation="x * y" x="7" y=$category.level}px;"> - <a href="javascript:void(0);" url="{$siteurl}admin/?module=objects&ajax=yes&white=yes&modAction=changepreview&get_category=yes&id_category={$category.id_category}{if $type!=''}&type={$type}{/if}" targ="changepreviewlist" class="changelink{if $category.visible==0} nvisible{/if}{if $id_category==$category.id_category} active{/if}">{$category.caption}</a> [{if $type=="video"}{if $category.video}{$category.video}{else}0{/if}{else}{if $category.photos}{$category.photos}{else}0{/if}{/if}]</li>
+ {/if}
+{/foreach}
+</ul>
+{elseif $modAction=="ftp"}
+<ul>
+	<li><a href="{$siteurl}admin/?module=objects&modAction=seenew">Вернуться в галерею</a></li>
+</ul>
+{else}
+
+{/if}

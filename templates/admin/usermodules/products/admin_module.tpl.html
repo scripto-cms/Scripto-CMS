@@ -1,0 +1,717 @@
+{if $m_action=="add" || $m_action=="add_firm" || $m_action=="edit_type" || $m_action=="add_action"}
+{$form_html}
+{elseif $m_action=="set_options"}
+	<h2>Настройка дополнительных значений для товара {$product.caption}</h2>
+	{if $saved}
+	<script>
+		parent.tooltip('','Характеристики обновлены!',3000);
+	</script>
+	{/if}
+	{if $options[0]}
+	{$form_html}
+	{else}
+	<p>Дополнительных опций для данного типа товара не задано</p>
+	{/if}
+{elseif $m_action=="options"}
+{if $type}
+	<h2>Добавить характеристику</h2>
+	{if $added}
+	<script>
+		parent.tooltip('Характеристика создана','Характеристика создана успешно!',5000);
+	</script>
+	{/if}
+	{if $saved}
+	<script>
+		parent.tooltip('Данные обновлены','{$mess}',5000);
+	</script>	
+	{/if}
+	<div class="body">
+		<form action="{$siteurl}admin/?module=modules&module_name=products&m_action=options&modAction=settings&ajax=yes&id_type={$type.id_type}&add=yes" method="post">
+				<table width="100%">
+					<tr>
+						<td class="objects_header" width="30%">Название характеристики</td>
+						<td class="objects_header" width="30%">Значения</td>
+						<td class="objects_header" width="20%">Выводить при заказе</td>
+						<td class="objects_header" width="20%">Действия</td>
+					</tr>
+					<tr height="50">
+						<td valign="top"><input type="text" name="caption" class="textbox"></td>
+						<td valign="top" class="biglist"><textarea name="value" class="n100"></textarea></td>
+						<td valign="top" align="center" class="bigbutton"><input type="checkbox" name="in_order"></td>
+						<td valign="top" align="center" class="bigbutton"><input type="submit" value="добавить"></td>
+					</tr>
+				</table>					
+		</form>
+	<p><b>Внимание!</b> Если поле значения заполнить , то при заказе товара будет возможность выбора типа товара. Опции указывать по одной на строку.</p>
+	<h2>Существующие характеристики</h2>
+	{if $options}
+	<form action="{$siteurl}admin/?module=modules&module_name=products&m_action=options&modAction=settings&ajax=yes&id_type={$type.id_type}&save=yes" method="post">
+		<table width="100%">
+		<tr>
+			<td class="objects_header" width="30%">Название характеристики</td>
+			<td class="objects_header" width="30%">Значения</td>
+			<td class="objects_header" width="20%">Выводить при заказе</td>
+			<td class="objects_header" width="20%">Удалить</td>
+		</tr>	
+	{foreach key=key item=option from=$options}
+		<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="type{$type.id_type}">
+			<td><input type="text" name="caption[{$option.id_option}]" class="textbox" value="{$option.caption}"></td>
+			<td><textarea name="value[{$option.id_option}]" class="n100">{$option.values}</textarea></td>
+			<td align="center"><input type="checkbox" name="inorder[{$option.id_option}]" {if $option.show_in_order}checked{/if}></td>
+			<td align="center"><input type="checkbox" name="del[{$option.id_option}]"></td>
+		</tr>
+	{/foreach}
+		<tr>
+			<td colspan="3" align="center"><input type="submit" value="Сохранить"></td>
+		</tr>
+		</table>
+		</form>
+	{else}
+	<p>Для данного типа товаров не заданы характеристики.</p>
+	{/if}	
+	</div>
+{else}
+	<p>Неверно задан идентификатор типа товаров.</p>
+{/if}
+{elseif $m_action=="recommended"}
+<div class="body">
+	<h2>Настройки рекомендуемых товаров</h2>
+	<p>Выберите тип товара, для которого настроить crosssale:</p>
+	<table class="objects">
+	<tr>
+	<td class="objects_header" width="90%">Название типа товаров</td>
+	<td class="objects_header" width="10%" align="right"><span>Настройка</span></td>
+	</tr>	
+	{foreach key=key item=type from=$types}
+	<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="type{$type.id_type}">
+		<td>{$type.caption}</td>
+		<td class="actions">
+			<ul>
+				<li><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=view&id_type={$type.id_type}" title="Просмотреть объекты типа {$type.caption}"><img src="{$img}admin/icons/cube_blue.gif"></a></li>
+			</ul>
+		</td>
+	</tr>
+	{/foreach}
+	</table>
+</div>
+{elseif $m_action=="pricing"}
+<div class="body">
+	<h2>Управление наценками на товары</h2>
+	<form action="" method="post">
+					<h2>Настройки наценки</h2>
+					<p><input type="radio" name="mode" value="0" checked>&nbsp;Изменить только розничную стоимость товара (изменение произойдет от старой закупочной цены)</p>
+					<p><input type="radio" name="mode" value="1">&nbsp;Изменить только закупочную стоимость товара</p>					
+					<p><input type="radio" name="mode" value="2">&nbsp;Изменить розничную и закупочную стоимость товара (изменение произойдет от новой закупочной цены)</p>
+					<p><input type="radio" name="mode" value="3">&nbsp;Вернуть старые цены (изменяется только розничная цена, старые цены будут нулевыми)</p>
+					<p><input type="radio" name="mode" value="4">&nbsp;Обнулить старые цены (убрать распродажу)</p>
+					<p><input type="checkbox" name="old_price_set">&nbsp;Установить текущие розничные цены как старые (создать распродажу)</p>
+					<p><input type="checkbox" name="current_price">&nbsp;Изменять стоимость товара, исходя из его текущей розничной стоимости</p>
+					<h2>Величина наценки</h2>
+					<table width="500">
+						<tr>
+							<td width="25%">
+								<select name="math_mode" class="textbox">
+									<option value="0">Увеличить</option>
+									<option value="1">Уменьшить</option>
+								</select>
+							</td>
+							<td width="35%" align="center">
+								стоимость товаров на
+							</td>
+							<td width="20%">
+								<input type="text" class="textbox" align="center" name="price_value" value="0">
+							</td>
+							<td align="center" width="20%">
+								<select name="price_mode" class="textbox">
+									<option value="0">%</option>
+									<option value="1">Руб.</option>
+								</select>							
+							</td>
+						</tr>
+					</table>
+					<h2>Объекты наценки</h2>
+					<table width="500">
+						<tr>
+							<td width="5%" align="center"><input type="radio" name="product_type" value="0" checked></td>
+							<td width="35%">Все товары</td>
+							<td width="60%"></td>
+						</tr>
+						<tr>
+							<td width="5%" align="center"><input type="radio" name="product_type" value="1"></td>
+							<td width="35%">Фирма\коллекция:</td>
+							<td width="60%">
+								<select name="firm">
+								{foreach key=key item=frm from=$firms}
+									<option value="{$frm.id}">{$frm.name}</option>
+								{/foreach}
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td width="5%" align="center"><input type="radio" name="product_type" value="2"></td>
+							<td width="35%">Тип товара:</td>
+							<td width="60%">
+								<select name="id_type">
+								{foreach key=key item=type from=$types}
+									<option value="{$type.id}">{$type.name}</option>
+								{/foreach}
+								</select>
+							</td>
+						</tr>
+						<tr height="50">
+							<td width="5%" valign="top" align="center"><input type="radio" name="product_type" value="3"></td>
+							<td width="35%" valign="top">Раздел:</td>
+							<td width="60%">
+								<p><select name="id_cat">
+								{foreach key=key item=rub from=$rubrs}
+									<option value="{$rub.id}">{$rub.name}</option>
+								{/foreach}
+								</select>
+								</p>
+								<p><input type="checkbox" name="do_subcategories" checked>&nbsp;Включая подразделы</p>
+							</td>
+						</tr>						
+					</table>
+					<p class="bigbutton" align="left"><input type="submit" value="Установить наценку"></p>					
+		<input type="hidden" name="do_pricing" value="1">
+	</form>
+</div>
+{elseif $m_action=="types"}
+<div class="body">
+	<h2>Добавить новый тип товара</h2>
+	<div class="body">
+		<table width="500">
+			<tr>
+				<td width="30%">Укажите название типа</td>
+				<td width="30%"><input type="text" name="caption" id="typeName" class="textbox"></td>
+				<td width="40%"><div class="actionbutton" id="createType">Создать тип</div></td>
+			</tr>
+		</table>
+	</div>
+	<h2>Существующие типы товаров</h2>
+	{if $types}
+	<form action="{$siteurl}admin/?module=modules&module_name=products&m_action=types&modAction=settings&saved=yes" method="post">
+	<table class="objects">
+	<tr>
+	<td class="objects_header editable_header" width="80%"><span>Название типа товаров</span></td>
+	<td class="objects_header editable_header" width="10%"><span>Удалить</span></td>
+	<td class="objects_header" width="10%" align="right"><span>Действия</span></td>
+	</tr>	
+	{foreach key=key item=type from=$types}
+	<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="type{$type.id_type}">
+		<td class="editable"><span>{$type.caption}</span><input type="text" name="caption[{$type.id_type}]" value="{$type.caption}" class="nonvisible"></td>
+		<td class="editable" align="center"><input type="checkbox" name="del[{$type.id_type}]" class="deletecheckbox" numb="0"></td>
+		<td class="actions" align="right">
+			<ul>
+				<li><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=edit_type&modAction=settings&id_type={$type.id_type}&mode=edit" title="Редактировать тип {$type.caption}"><img src="{$img}admin/icons/edit.gif"></a></li>			
+				<li><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=options&modAction=settings&ajax=yes&id_type={$type.id_type}" class="dialog" title="Задать поля для типа {$type.caption}"><img src="{$img}admin/icons/cube_blue.gif" alt="Задать поля для типа {$type.caption}"></a></li>
+			</ul>
+		</td>
+	</tr>
+	{/foreach}
+	</table>
+	<table class="objects2" width="100%">
+	<tr>
+		<td width="80%"></td>
+		<td width="10%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+		<td width="10%"></td>
+	</tr>
+	<tr id="save_submit">
+		<td colspan="3" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+	</tr>
+	</table>
+	</form>	
+	{else}
+	<p id="clear">На данный момент не создано ни одного типа товаров</p>
+	<form action="{$siteurl}admin/?module=modules&module_name=products&m_action=types&modAction=settings&save=yes" method="post">	
+	<table class="objects nonvisible">
+	<tr>
+	<td class="objects_header editable_header" width="80%"><span>Название типа товаров</span></td>
+	<td class="objects_header editable_header" width="10%"><span>Удалить</span></td>
+	<td class="objects_header" width="10%" align="right"><span>Действия</span></td>
+	</tr>	
+	</table>
+	<table class="objects2 nonvisible" width="100%">
+	<tr>
+	<td width="80%"></td>
+	<td width="10%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+	<td width="10%"></td>
+	</tr>
+	<tr id="save_submit">
+	<td colspan="3" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+	</tr>
+	</table>
+	</form>	
+	{/if}
+</div>
+{elseif $m_action=="action_products"}
+{if $action}
+	<h2>Товары, учавствующие в акции {$action.caption}</h2>
+	{if $delete}
+		<script>
+			parent.tooltip('Товары удалены','Товары успешно удалены из акции {$action.caption}',5000);
+		</script>
+	{/if}
+	{if $products}
+		<form action="" method="post">
+		<table width="100%">
+		<tr>
+			<td class="objects_header" width="80%">Товар</td>
+			<td class="objects_header" width="20%">Удалить</td>
+		</tr>	
+	{foreach key=key item=product from=$products}
+		<tr height="30" class="{cycle values="objects_cell_light,objects_cell_bold"}" id="type{$type.id_type}">
+			<td>{$product.caption} {if $product.code}(<b>{$product.code}</b>){/if}</td>
+			<td align="center"><input type="checkbox" name="del[{$product.id_product}]"></td>
+		</tr>
+	{/foreach}
+		<input type="hidden" name="save" value="1">
+		<tr>
+			<td colspan="2" align="center"><input type="submit" value="Сохранить"></td>
+		</tr>
+		</table>
+		</form>	
+	{else}
+		<p>В данной акции не учавствует ни один товар.</p>
+	{/if}
+{/if}
+{elseif $m_action=="collections"}
+{if $firm}
+	<h2>Добавить коллекцию для фирмы {$firm.caption}</h2>
+	{if $added}
+	<script>
+		parent.tooltip('Коллекция создана','Коллекция создана успешно!',5000);
+	</script>
+	{/if}
+	{if $saved}
+	<script>
+		parent.tooltip('Данные обновлены','{$mess}',5000);
+	</script>	
+	{/if}
+	<div class="body">
+		{if $exist_collection}
+		<p><b>Внимание!</b> Коллекция {$caption} уже существует!</p>
+		{/if}
+		<form action="" method="post">
+				<table width="400">
+					<tr height="50">
+						<td width="35%">Название коллекции:</td>
+						<td width="40%" align="center"><input type="text" name="caption" class="textbox" value="{if $caption}{$caption}{/if}"></td>
+						<td width="25%" align="center" class="bigbutton"><input type="submit" value="добавить"></td>
+					</tr>
+				</table>
+				<input type="hidden" name="add" value="1">				
+		</form>
+	<h2>Существующие коллекции фирмы {$firm.caption}</h2>
+	{if $collections}
+	<form action="" method="post">
+		<table width="100%">
+		<tr>
+			<td class="objects_header" width="80%">Название коллекции</td>
+			<td class="objects_header" width="20%">Удалить</td>
+		</tr>	
+	{foreach key=key item=collection from=$collections}
+		<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="type{$type.id_type}">
+			<td><input type="text" name="caption[{$collection.id_collection}]" class="textbox" value="{$collection.caption}"></td>
+			<td align="center"><input type="checkbox" name="del[{$collection.id_collection}]"></td>
+		</tr>
+	{/foreach}
+		<input type="hidden" name="save" value="1">
+		<tr>
+			<td colspan="2" align="center"><input type="submit" value="Сохранить"></td>
+		</tr>
+		</table>
+		</form>
+	{else}
+	<p>Для фирмы {$firm.caption} не было добавлено ни одной коллекции.</p>
+	{/if}	
+	</div>
+{else}
+	<p>Неверно задан идентификатор фирмы.</p>
+{/if}
+{elseif $m_action=="quickedit_firm"}
+{if $save}
+	 <script>
+		parent.tooltip('','Изменения сохранены!',3000);
+	 </script>
+{/if}
+{if $close}
+	<script>
+	{literal}
+		parent.show_close_dialog=false;
+		parent.$.fancybox.close();
+	{/literal}
+	</script>
+{/if}
+<form action="" method="post">
+<table width="100%" cellpadding="0" cellspacing="0" class="whiteheader">
+	<tr>
+		<td width="70%">Описание фирмы <b>{$firm.caption}</b></td>
+		<td width="30%" align="right"><input type="submit" value="Сохранить изменения"></td>
+	</tr>
+</table>
+<input type="hidden" name="id_firm" value="{$firm.id_firm}">
+<input type="hidden" name="save" value="yes">
+{$editor}
+</form>
+{elseif $m_action=="actions"}
+<div class="body">
+	<div class="body">
+		<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=products&m_action=add_action&modAction=settings');">Создать акцию</div>
+	</div>
+	<h2>Существующие акции</h2>
+	{if $actions}
+		<form action="" method="post">
+		<table class="objects">
+			<tr>
+				<td class="objects_header editable_header" width="80%"><span>Название акции</span></td>
+				<td class="objects_header editable_header" width="10%"><span>Удалить</span></td>
+				<td class="objects_header" align="right">Действия</td>
+			</tr>
+			{assign var="k" value=0}
+			{foreach key=key item=action from=$actions}
+			<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="action{$action.id_action}">
+				<td class="editable"><span>{$action.caption}</span><input type="text" class="nonvisible" value="{$action.caption}" name="caption[{$action.id_action}]"></td>
+				<td align="center"><input type="checkbox" name="del[{$action.id_action}]" class="deletecheckbox" numb="0"></td>
+				<td class="actions" align="right">
+					<ul>
+						<li><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=add_action&modAction=settings&id_action={$action.id_action}&mode=edit" title="Редактировать акцию {$action.caption}"><img src="{$img}admin/icons/edit.gif"></a></li>
+						<li><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=action_products&modAction=settings&id_action={$action.id_action}&ajax=yes" title="Товары, учавствующие в акции {$action.caption}" class="dialog"><img src="{$img}admin/icons/cube_blue.gif"></a></li>
+					</ul>
+				</td>
+			</tr>
+			<input type="hidden" name="idaction[{$action.id_action}]" value="{$action.id_action}">
+			{/foreach}
+			<tr>
+				<td></td>
+				<td class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+				<td></td>
+			</tr>
+			<tr id="save_submit">
+				<td colspan="3" align="center"><input type="submit" value="Сохранить" class="button"></td>
+			</tr>
+			</table>
+			<input type="hidden" name="save" value="yes">
+			</form>		
+	{else}
+		<p>Вы не создали ни одной акции</p>
+	{/if}
+</div>
+{elseif $m_action=="firms"}
+<div class="body">
+	<h2>Добавить фирму</h2>
+	<div class="body">
+		<form action="" method="post">
+		<table width="400">
+			<tr>
+				<td width="30%">Название фирмы:</td>
+				<td width="50%"><input type="textbox" name="firmcaption" class="textbox" value=""></td>
+				<td width="20%" class="bigbutton"><input type="submit" value="Добавить"></td>
+			</tr>
+		</table>
+		<input type="hidden" name="add" value="1">
+		</form>
+	</div>
+	<h2>Фирмы</h2>
+	{if $firms}
+		<form action="" method="post">
+		<table class="objects">
+			<tr>
+				<td class="objects_header editable_header" width="70%"><span>Название фирмы</span></td>
+				<td class="objects_header" width="1%"></td>
+				<td class="objects_header editable_header" width="9%"><span>Удалить</span></td>
+				<td class="objects_header" align="right">Действия</td>
+			</tr>
+			{assign var="k" value=0}
+			{foreach key=key item=firm from=$firms}
+			<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="firm{$firm.id_firm}">
+				<td class="editable"><span>{$firm.caption}</span><input type="text" class="nonvisible" value="{$firm.caption}" name="caption[{$firm.id_firm}]"></td>
+				<td align="center"><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=quickedit_firm&modAction=settings&id_firm={$firm.id_firm}&ajax=yes" class="editor"><img src="{$admin_icons}quickedit.png" border="0"></a></td>
+				<td align="center"><input type="checkbox" name="del[{$firm.id_firm}]" class="deletecheckbox" numb="0"></td>
+				<td class="actions" align="right">
+					<ul>
+						<li><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=add_firm&modAction=settings&id_firm={$firm.id_firm}&mode=edit" title="Редактировать фирму {$firm.caption}"><img src="{$img}admin/icons/edit.gif"></a></li>
+						<li><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=collections&modAction=settings&id_firm={$firm.id_firm}&ajax=yes" class="dialog"><img src="{$img}admin/icons/cube_blue.gif"></a></li>
+					</ul>
+				</td>
+			</tr>
+			<input type="hidden" name="idfirm[{$firm.id_firm}]" value="{$firm.id_firm}">
+			{/foreach}
+			<tr>
+				<td colspan="2"></td>
+				<td class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+				<td></td>
+			</tr>
+			<tr id="save_submit">
+				<td colspan="4" align="center"><input type="submit" value="Сохранить" class="button"></td>
+			</tr>
+			</table>
+			<input type="hidden" name="save" value="yes">
+			</form>			
+	{else}
+		<p>Вы еще не добавили ни одной фирмы для товаров.</p>
+	{/if}
+</div>
+{elseif $m_action=="csv"}
+<div class="body">
+	<h2>Настройка параметров импорта из файла CSV</h2>
+	<p>Вам необходимо указать корневую категорию для каталога товаров:&nbsp;
+	<select id="csv_cat">
+		{foreach key=key item=r from=$rubrs}
+			<option value="{$r.id}">{$r.name}</option>
+		{/foreach}
+	</select>
+	</p>
+	<h2>Настройка столбцов</h2>
+	<p>Ниже приведена таблица значений столбцов, Вам необходимо указать как в Вашем CSV файле называются столбцы "название товара" , "стоимость товара" , "категория" и т.п.</p>
+	<p>Разделы каталога отделяются знаками ! , т.е. если Вам необходимо добавить раздел , то нужно писать "!раздел" , а если товар, то просто его название. Количество "!" означает уровень вложенности, например "!!подраздел" будет подразделом раздела</p>
+	<p>Если в Вашем CSV файле нет какого либо поля, просто оставьте его пустым.</p>
+	<table class="objects">
+		<tr>
+			<td class="objects_header" width="60%">Столбец</td>
+			<td class="objects_header">Значение</td>
+		</tr>
+		{foreach key=key item=cs from=$csv}
+		<tr class="{cycle values="objects_cell_light,objects_cell_bold"}">
+			<td><select class="sheet" attr="{$key}">{foreach key=key2 item=sheet from=$sheets}<option value="{$key2}" {if $key2==$key}selected{/if}>{$sheet}</option>{/foreach}</select></td>
+			<td><select class="csv" attr="{$key}">{foreach key=key3 item=cs2 from=$csv}<option value="{$cs2.id}" {if $key3==$key}selected{/if}>{$cs2.caption}</option>{/foreach}<option value="csv_null">Пусто</option></select></td>
+		</tr>
+		{/foreach}	
+	</table>
+	<div class="body"><div class="actionbutton" id="csv_start">Выбрать файл и начать импорт</div></div>
+</div>
+{elseif $m_action=="quickedit"}
+		{if $save}
+		 <script>
+ 			parent.tooltip('','Изменения сохранены!',3000);
+		 </script>
+		{/if}
+		{if $close}
+		<script>
+		{literal}
+			parent.show_close_dialog=false;
+			parent.$.fancybox.close();
+		{/literal}
+		</script>
+		{/if}
+<form action="" method="post">
+<table width="100%" cellpadding="0" cellspacing="0" class="whiteheader">
+	<tr>
+		<td width="70%">Содержимое товара <b>{$product.caption}</b></td>
+		<td width="30%" align="right"><input type="submit" value="Сохранить изменения"></td>
+	</tr>
+</table>
+<input type="hidden" name="id_product" value="{$product.id_product}">
+<input type="hidden" name="save" value="yes">
+{$editor}
+</form>
+	{elseif $m_action=='gallery'}
+		<h2>Галерея изображений товара {$product.caption}</h2>
+		<div class="body">
+			<div class="actionbutton"><a href="{$siteurl}admin/?module=objects&modAction=changepreview&ajax=true&mode=new&id_category={$product.id_category}&get_rubrics=true&multiple=yes" class="change">Добавить новое изображение</a></div>
+		</div>
+		<div class="body">
+			{if $product.pictures}
+					<form action="{$siteurl}admin/?module=modules&module_name=products&modAction=settings&m_action=gallery&id_product={$product.id_product}&sort_me=yes" method="post" id="objects_form">
+					<table class="pictures">
+					<tr>
+						<td class="objects_header" width="40%">Изображение</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+						<td class="objects_header" width="20%" align="center">Действия</td>
+					</tr>
+					{foreach key=key item=image from=$product.pictures}
+					<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="img{$image.id_image}">
+						<td id="preview{$image.id_image}"><a href="{$siteurl}admin/?module=objects&amp;modAction=crop&amp;id_photo={$image.id_image}&amp;ajax=true" class="crop"><img src="{$user_thumbnails}{$image.small_filename}" border="0"></td>
+						<td align="center"><input type="text" name="sort[{$image.id_image}]" class="textbox" value="{$image.sort}" size="3"></td>
+						<td align="center"><input type="checkbox" name="del[{$image.id_image}]" class="deletecheckbox" numb="0"></td>
+						<td align="center"><a href="{$siteurl}admin/?module=objects&modAction=changepreview&ajax=true&mode={$image.id_image}&id_category={$product.id_category}&get_rubrics=true" class="change">изменить</a></td>
+					</tr>
+					{/foreach}
+					</table>
+					<table class="pictures2">
+						<tr>
+							<td width="40%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+							<td width="20%"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+					</table>
+					</form>						
+			{else}
+			<p class="toDel">Для данного товара еще не загружено изображений</p>
+					<form action="{$siteurl}admin/?module=modules&module_name=products&modAction=settings&m_action=gallery&id_product={$product.id_product}&sort_me=yes" method="post" id="objects_form">	
+					<table class="pictures nonvisible">
+					<tr>
+						<td class="objects_header" width="40%">Изображение</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+						<td class="objects_header" width="20%" align="center">Действия</td>
+					</tr>
+					</table>
+					<table class="pictures2 nonvisible">
+						<tr>
+							<td width="40%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+							<td width="20%"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+						</table>
+					</form>					
+			{/if}
+		</div>
+{elseif $m_action=="product_products"}
+<div id="products">
+<h1 class="padding">Добавить новый товар к товару {$product.caption}</h1>
+<p>Выберите товар:</p>
+<form id="frm">
+<p>
+<select name="id_product2">
+{foreach key=key item=prod from=$products}
+	<option value="{$prod.id_product}">{$prod.caption} [{$prod.code}]</option>
+{/foreach}
+</select>
+</p>
+<p class="padding"><input type="button" value="Добавить" onclick="loadContentForm('{$siteurl}admin/?module=modules&module_name=products&white=yes&m_action=product_products&ajax=true&modAction=settings&id_product={$product.id_product}&add_product=yes','products','frm','products');" class="button"></p>
+</form>
+<h1 class="padding">Товары, выводимые с товаром {$prod.caption}</h1>
+{if $me_products}
+{foreach key=key item=prod from=$me_products}
+<p>{$product.caption} {if $prod.code}[{$prod.code}]{/if} &nbsp;<a href="javascript:void(0);" onclick="YesNoAjax('Удалить товар {$prod.caption} из блока {$block.caption}?','{$siteurl}admin/?module=modules&module_name=products&white=yes&m_action=product_products&ajax=true&modAction=settings&id_product={$product.id_product}&id_product2={$prod.id_product}&delete_product=yes','products');"><img src="{$img}admin/icons/delete.gif" border="0"></a></p>
+{/foreach}
+{else}
+В данном блоке еще не выводится ни одного товара
+{/if}
+</div>
+{else}
+			<table class="moduletable">
+				<tr>
+					<td class="module_left">
+						{include file="admin/usermodules/products/admin_menu.tpl.html"}
+					</td>
+					<td class="module_right">
+					{if $category.caption}
+					<div class="body">							
+						<h2>{$category.caption}</h2>
+							{if $ppath}
+							<div id="submodule_path">
+								{foreach key=key item=mod from=$ppath}
+									{if $mod.is_last==false}
+									<li>{if $mod.url}<a href="{$siteurl}admin/?module=modules&module_name=products&m_action=view&modAction=settings&id_category={$mod.id_category}">{$mod.caption}</a>{else}{$mod.caption}{/if}</li>
+										<li>></li>
+										{else}
+										<li>{$mod.caption}</li>
+									{/if}
+								{/foreach}
+							</div>
+							{/if}		
+<div class="body">					
+{if $id_category}
+<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=products&m_action=add&mode=add&modAction=settings&id_category={$id_category}');">Добавить товар</div>
+<div class="actionbutton" onclick="promptUrl('Укажите необходимое количество заготовок (от 1 до 99)','{$siteurl}admin/?module=modules&module_name=products&m_action=quickadd&modAction=settings&id_category={$id_category}','number');">Создать заготовки</div>
+<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&modAction=settings&module_name=products');">Специальные возможности</div>
+{/if}
+				<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=products" method="post" id="search_form">
+				<div id="searchbox"><table><tr><td width="90%"><input type="text" name="str" value="{$str}" class="sbox"></td><td><input type="image" src="{$siteurl}images/admin/s_icon.jpg"></td></tr></table></div>
+				<input type="hidden" name="m_action" value="view">
+				<input type="hidden" name="id_category" value="{$id_category}">
+				</form>
+</div>
+{/if}
+
+{if $products}
+<p align="right">
+Выберите страницу:
+{foreach key=key item=pg from=$pages}
+	{if $pagenumber==$pg}
+		<b>{$pg+1}</b>
+	{else}
+		<a href="{$siteurl}admin/?module=modules&module_name=products&m_action=view&mode=add&modAction=settings{if $view_products}&view_products=yes{/if}&id_category={$id_category}&p={$pg}&str={$str_url}">{$pg+1}</a>
+	{/if}
+	&nbsp;
+{/foreach}
+</p>
+<form action="{$siteurl}admin/?module=modules&module_name=products&m_action=save&modAction=settings&id_category={$id_category}" method="post">
+<table class="objects">
+<tr>
+	<td width="10%" class="objects_header">Изображение</td>
+	<td width="36%" class="objects_header editable_header"><span>Название товара</span></td>
+	<td width="12%" class="objects_header editable_header"><span>Стоимость</span></td>
+	<td width="12%" class="objects_header editable_header"><span>Код товара</span></td>
+	<td width="1%" class="objects_header"></td>
+	<td width="8%" class="objects_header" align="center">Видимость</td>
+	<td width="4%" class="objects_header editable_header"><span>Сортировка</span></td>
+	<td width="7%" class="objects_header" align="center">Удалить</td>	
+	<td width="10%" class="objects_header" align="right">Операции</td>
+</tr>
+{assign var="k" value=0}
+{foreach key=key item=product from=$products}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="prod{$product.id_product}">
+					<td align="center">
+							{if $product.picture.small_filename!=''}
+								<img src="{$user_thumbnails}{$product.picture.small_filename}" class="imgpreview">
+							{/if}
+						</td>
+<td class="editable"><span>{$product.caption}</span><input type="text" name="caption[{$k}]" value="{$product.caption}"  class="nonvisible"></td>
+<td class="editable" align="center"><span>{$product.price1}</span><input type="text" name="price[{$k}]" value="{$product.price1}" class="nonvisible" style="width:50%;"> руб</td>
+<td class="editable" align="center"><span>{if $product.code}{$product.code}{else}--{/if}</span><input type="text" name="code[{$k}]" value="{$product.code}" style="width:50%;" class="nonvisible"></td>
+<td align="center"><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=quickedit&modAction=settings&id_product={$product.id_product}&ajax=yes" class="editor"><img src="{$admin_icons}quickedit.png" border="0"></a></td>
+<td align="center"><input type="checkbox" name="vis[{$k}]" {if $product.visible}checked{/if} class="checkbox" numb="0"></td>
+<td class="editable" align="center"><span>{$product.sort}</span><input type="text" name="sort[{$k}]" value="{$product.sort}" class="nonvisible" style="width:40%;"></td>
+<td align="center"><input type="checkbox" name="del[{$k}]" class="deletecheckbox" numb="1"></td>
+	<td class="actions" nowrap>
+		<ul>	
+			<li><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=add&modAction=settings&id_product={$product.id_product}&mode=edit" title="{$lang.interface.edit_product} {$product.caption}"><img src="{$img}admin/icons/edit.gif"></a></li>
+			<li><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=gallery&modAction=settings&id_product={$product.id_product}" title="{$lang.interface.change_picture_product} {$product.caption}"><img src="{$img}admin/products/change_picture.gif" width="16" height="16" alt="{$lang.interface.change_picture_product} {$product.caption}"></a></li>
+			{if $product.id_type>0}
+			<li><a href="{$siteurl}admin/?module=modules&module_name=products&m_action=set_options&modAction=settings&id_product={$product.id_product}&ajax=yes" title="{$lang.interface.change_options} {$product.caption}" class="dialog"><img src="{$img}admin/icons/listbox.png" width="16" height="16" alt="{$lang.interface.change_options} {$product.caption}"></a></li>			
+			{/if}
+		</ul>
+	</td>
+</tr>
+<input type="hidden" name="idprod[{$k}]" value="{$product.id_product}">
+{assign var="k" value=$k+1}
+{/foreach}
+<input type="hidden" name="p" value="{$pagenumber}">
+<tr>
+	<td colspan="5"></td>
+	<td class="selectall" align="center"><input type="checkbox" numb="0"></td>
+	<td></td>
+	<td class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="1"></td>
+	<td></td>
+</tr>
+<tr id="save_submit">
+	<td colspan="9" align="center"><input type="submit" value="Сохранить" class="button"></td>
+</tr>
+</table>
+</form>
+{else}
+{if $id_category}
+<p>В данном разделе  товаров не найдено</p>
+{else}
+<h2>Специальные возможности</h2>
+<div class="body">
+	<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=products&m_action=csv&modAction=settings');">Импорт из CSV</div>
+	<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=products&m_action=types&modAction=settings');">Типы товаров</div>
+	<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=products&m_action=firms&modAction=settings');">Фирмы и коллекции</div>
+	<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=products&m_action=pricing&modAction=settings');">Управление наценками</div>
+	<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=products&m_action=actions&modAction=settings');">Акции и спецпредложения</div>
+</div>
+{if $count>0}
+<div class="body">
+<p>В базе <b>{$count}</b> товаров.</p>
+</div>
+{/if}
+{/if}
+{/if}
+</div>
+</td>
+</tr>
+</table>
+{/if}

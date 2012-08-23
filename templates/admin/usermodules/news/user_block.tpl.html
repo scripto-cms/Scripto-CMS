@@ -1,0 +1,9 @@
+{foreach key=key item=obj from=$block_objects}
+	<div class="item">
+		<div class="item_date">{$obj.date_print}</div>
+		<div class="item_body">
+			<p class="zag">{if $obj.content_full}<a href="{$obj.full_url}">{/if}{$obj.caption}{if $obj.content_full}</a>{/if}</p>
+			<p>{$obj.content}</p>
+		</div>							
+	</div>
+{/foreach}

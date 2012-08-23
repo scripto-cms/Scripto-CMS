@@ -1,0 +1,160 @@
+{if $m_action=="add_subscribe"}
+{$form_html}
+<p><b>Примечание:</b> Вы можете использовать тег %NAME% для автоматической вставки имени пользователя при рассылке.</p>
+{else}	
+<table class="moduletable">
+<tr>
+<td class="module_left">
+{if $m_action=="view"}
+<p><b>Участники рассылки</b></p>
+{else}
+<p><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=subscribe">Участники рассылки</a></p>
+{/if}
+{if $m_action=="import"}
+<p><b>Импорт\экспорт</b></p>
+{else}
+<p><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=subscribe&m_action=import">Импорт\экспорт</a></p>
+{/if}
+{if $m_action=="subscribes" || $m_action=="start_subscribe"}
+<p><b>Рассылки</b></p>
+{else}
+<p><a href="{$siteurl}admin/?module=modules&modAction=settings&module_name=subscribe&m_action=subscribes">Рассылки</a></p>
+{/if}
+</td>
+<td class="module_right">
+<div class="body">
+{if $m_action=="subscribes"}
+	<div class="body">
+		<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&modAction=settings&module_name=subscribe&m_action=add_subscribe');">Создать рассылку</div>
+	</div>
+	<h2>Существующие рассылки</h2>
+	<div class="body">
+	{if $archives}
+		<p align="right">
+Выберите страницу:
+{foreach key=key item=p from=$pages}
+	{if $p==$pagenumber}
+		<b>{$p+1}</b>
+	{else}
+		<a href="{$siteurl}admin/?module=modules&module_name=subscribe&modAction=settings&m_action=subscribes&p={$p}">{$p+1}</a>
+	{/if}
+	&nbsp;
+{/foreach}
+	</p>
+	<table class="objects" id="subscribe">
+		<tr height="30">
+			<td width="10%" class="objects_header">Создана</td>
+			<td width="60%" class="objects_header">Тема рассылки</td>
+			<td width="20%" class="objects_header">e-mail</td>
+			<td width="10%" class="objects_header" align="right">Действия</td>
+		</tr>	
+		{foreach key=key item=archive from=$archives}	
+		<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="object{$archive.id_archive}">
+			<td>{$archive.date_print}</td>
+			<td>{$archive.caption}</td>
+			<td>{$archive.backmail}</td>
+			<td class="actions" align="right">
+				<ul>
+					<li><a href="javascript:void(0);" class="start_subscribe" id_archive="{$archive.id_archive}" title="Запустить рассылку {$archive.caption}"><img src="{$img}admin/icons/play.png"></a></li>
+					<li><a href="{$siteurl}admin/?module=modules&module_name=subscribe&m_action=add_subscribe&modAction=settings&id_archive={$archive.id_archive}&mode=edit" title="Редактировать рассылку {$archive.caption}"><img src="{$img}admin/icons/edit.gif"></a></li>
+					<li><a href="javascript:void(0);" onclick="YesNo('Удалить рассылку {$archive.caption}?','{$siteurl}admin/?module=modules&module_name=subscribe&m_action=subscribes&modAction=settings&id_archive={$archive.id_archive}&delete=yes&p={$pagenumber}');" title="Удалить рассылку {$archive.caption}"><img src="{$img}admin/icons/delete.gif" alt="Удалить способ оплаты {$paym.caption}"></a></li>					
+				</ul>
+			</td>
+		</tr>
+		{/foreach}
+	</table>
+	{else}
+		<p>Вы не создали ни одной рассылки</p>
+	{/if}
+	</div>
+{/if}
+{if $m_action=="import"}
+<h2>Импорт базы e-mail</h2>
+<div class="body">
+	{if $users_install}
+	<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&modAction=settings&module_name=subscribe&m_action=importfromusers');">Импорт из пользователей</div>
+	{/if}
+	<div id="txt_button" class="actionbutton">Импорт из текстового файла</div>
+</div>
+<p>Внимание! Если Вы используете импорт из текстового файла, то он должен быть составлен в следующем формате:</p>
+<p><textarea style="width:300px;height:100px;">
+e-mail|фио
+e-mail|фио
+e-mail|фио
+e-mail|
+e-mail|фио
+e-mail|
+</textarea></p>
+<h2>Экспорт базы e-mail</h2>
+<div class="body">
+	{if $users_install}
+	<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&modAction=settings&module_name=subscribe&m_action=exporttxt');">Экспорт базы e-mail</div>
+	{/if}
+</div>
+{/if}
+{if $m_action=="view"}
+<div class="body">		
+	<div class="actionbutton" id="add_email_button">Добавить e-mail</div>			
+				<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=subscribe" method="post" id="search_form">
+				<div id="searchbox"><table><tr><td width="90%"><input type="text" name="str" value="{$str}" class="sbox"></td><td><input type="image" src="{$siteurl}images/admin/s_icon.jpg"></td></tr></table></div>
+				<input type="hidden" name="m_action" value="view">
+				</form>
+</div>
+<div class="body">
+{if $count>0}
+<p align="right">
+Выберите страницу:
+{foreach key=key item=p from=$pages}
+	{if $p==$pagenumber}
+		<b>{$p+1}</b>
+	{else}
+		<a href="{$siteurl}admin/?module=modules&module_name=subscribe&modAction=settings&p={$p}{if $str_url!=''}&str={$str_url}{/if}">{$p+1}</a>
+	{/if}
+	&nbsp;
+{/foreach}
+</p>
+<p>В Вашей базе <b>{$count}</b> e-mail для рассылки</p>	
+<div class="body">
+<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=subscribe" method="post" id="subscribe_form">
+<table class="objects" id="subscribe">
+<tr height="30">
+	<td width="40%" class="objects_header">e-mail</td>
+	<td width="40%" class="objects_header editable_header"><span>Имя</span></td>
+	<td width="20%" class="objects_header editable_header" align="center"><span>Удалить</span></td>
+</tr>
+{foreach key=key item=mail from=$emails}
+<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="email{$mail.id_email}">
+	<td><a href="mailto:{$mail.email}">{$mail.email}</a></td>
+	<td class="editable"><span>{if $mail.name}{$mail.name}{else}не указано{/if}</span><input type="text" name="name[{$mail.id_email}]" value="{$mail.name}" class="nonvisible"></td>
+	<td align="center"><input type="checkbox" name="del[{$mail.id_email}]" class="deletecheckbox" numb="0"></td>	
+</tr>
+<input type="hidden" name="idemail[{$mail.id_email}]" value="{$mail.id_email}">
+{/foreach}
+					<input type="hidden" name="p" value="{$pagenumber}">
+					{if $str!=''}
+					<input type="hidden" name="str" value="{$str}">
+					{/if}
+					<input type="hidden" name="m_action" value="save">
+<tr>
+	<td colspan="2"></td>
+	<td class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+</tr>
+<tr id="save_submit">
+	<td colspan="3" align="center"><input type="submit" value="Сохранить" class="button"></td>
+</tr>
+</table>
+</form>
+</div>
+{else}
+	{if $str}
+	<p>По данному запросу не найдено ни одного e-mail</p>
+	{else}
+	<p>В Вашей базе нет ни одного e-mail для рассылки</p>
+	{/if}
+{/if}
+{/if}
+</div>
+</td>
+</tr>
+</table>
+{/if}

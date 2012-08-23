@@ -1,0 +1,107 @@
+{if $white}
+{if $page.is_error}
+	<h1>Непредвиденная ошибка (модуль: {$page.title}.mod.php)</h1>
+		<p>{$page.content}</p>
+		<p><b>детальное описание:</b></p>
+		<p>{$page.help}</p>
+{else}
+	<h1>{$page.title}</h1>
+		{if $message}
+			<div id="message">{$message.description}</div>
+		{/if}				
+	{$page.content}
+{/if}
+{else}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<META http-equiv="content-type" content="text/html; charset=windows-1251">
+	<title>{$page.title} - {if $page.title==$lang.modules.objects}Загрузка новых объектов{/if}</title>
+	<script type="text/javascript" src="{$js}jquery-1.4.2.min.js"></script>	
+	{if $do_jCrop}
+	<script>
+	{literal}
+	var crop_api=null;
+	function cropMe(v) {
+		var w=$("#" + v + "_w").val();
+		var h=$("#" + v + "_h").val();
+		var x=$("#" + v + "_x").val();
+		var y=$("#" + v + "_y").val();	
+		var x2=$("#" + v + "_x2").val();
+		var y2=$("#" + v + "_y2").val();	
+		var width=$("#" + v + "_width").val();
+		var height=$("#" + v + "_height").val();			
+		$("#width").val(width);
+		$("#height").val(height);
+		var ratio=1;
+		if (width>0 && height>0) {
+			ratio=width/height;
+		} else {
+			if (width==0) {
+				width=height;
+			}
+			if (height==0) {
+				height=width;
+			}			
+		}
+		if (crop_api==null) {
+		 crop_api = $.Jcrop('#cropbox',{ 
+				onSelect:    showCoords,
+				boxWidth: 828,
+				boxHeight: 658,
+				setSelect: [x,y,x2,y2],
+				aspectRatio: ratio		
+		 });
+		} else {
+			crop_api.release();
+			//crop_api.setSelect([x,y,x2,y2]);
+			crop_api.animateTo([x,y,x2,y2]);
+			crop_api.setOptions({ aspectRatio: ratio });
+		}
+		$(".croptable").css("visibility","visible");		
+	}
+	function showCoords(c) {
+	  // variables can be accessed here as
+	  // c.x, c.y, c.x2, c.y2, c.w, c.h
+	  $("#x").val(c.x);
+	  $("#y").val(c.y);
+	  $("#x2").val(c.x2);
+	  $("#y2").val(c.y2);
+	  $("#w").val(c.w);  
+	  $("#h").val(c.h);
+	}	
+	
+	$(document).ready(function(){
+		$('#previewcreate').click(function() {
+		if (confirm('Сохранить превью?')) {
+			$("#frm").submit();
+		}
+		});
+	});
+	
+	{/literal}
+	</script>
+	
+	<script src="{$js}jcrop/js/jquery.jcrop.min.js"></script>
+	<link rel="stylesheet" href="{$js}jcrop/css/jquery.jcrop.css" type="text/css" />	
+	{/if}
+	<link rel="stylesheet" href="{$siteurl}templates/{$config.admin.main_css}" type="text/css" />
+	<style>
+		{$css}
+	</style>
+</head>	
+<body>
+<div id="content_white">
+{if $page.is_error}
+	<h1>Непредвиденная ошибка (модуль: {$page.title}.mod.php)</h1>
+		<p>{$page.content}</p>
+		<p><b>детальное описание:</b></p>
+		<p>{$page.help}</p>
+{else}
+	{$page.content}
+{/if}
+</div>
+</body>
+</html>
+{/if}

@@ -1,0 +1,219 @@
+* {
+margin:0px;
+padding:0px;
+font-family:Tahoma , Helvetica, Arial;
+color:#363636;
+font-size:14px;
+}
+
+* img {
+	border:none;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+body {
+	font-family: Tahoma , Helvetica, Arial;
+	font-size: 12px;
+	color:#363636;
+	background-color: #ecece8;
+}
+
+a {
+	color:#3774D0;
+	font-size:14px;
+	font-family: Tahoma , Helvetica, Arial;
+	text-decoration:underline;
+}
+
+a:hover {
+	color:#1F4B8D;
+	font-size:14px;
+	font-family: Tahoma , Helvetica, Arial;
+	text-decoration:none;
+}
+
+/*classes*/
+.licensebox {
+	width:758px;
+	width:738px/*ie*/;
+	height:400px;
+	height:380px/*ie*/;
+	border:1px solid black;
+	overflow:scroll;
+	float:left;
+	background:url(/images/admin/licensetext.jpg);
+	padding:10px;
+	font-size:12px;
+	color:#383838;
+	margin-bottom:20px;
+}
+	.licensebox * {
+		font-size:12px;
+		color:#383838;	
+	}
+	.licensebox p {
+		padding-top:5px;
+		padding-bottom:5px;
+	}
+.button {
+	font-size:20px;
+	color:black;
+	font-weight:lighter;
+	padding-top:5px;
+	padding-bottom:5px;
+}
+.button2 {
+	font-size:16px;
+	color:black;
+	font-weight:lighter;
+	padding-top:4px;
+	padding-bottom:4px;
+}
+.ots {
+	padding-left:30px;
+	padding-right:30px;
+}
+.header {
+	border-bottom:1px solid #888888;
+}
+.color1 {
+	background:#FDFDFD;
+	padding-left:10px;
+}
+	.color1 td {
+		padding-left:3px;	
+	}
+.color1:hover {
+	background:#e0e0e0;
+}
+.color2 {
+	background:#F6F6F6;
+}
+	.color2 td {
+		padding-left:3px;	
+	}
+.color2:hover {
+	background:#e0e0e0;
+}
+.mysql {
+	margin-top:20px;
+	margin-bottom:20px;
+}
+.mysql td {
+	font-size:16px;
+}
+.mysql td .textbox {
+	font-size:18px;
+	padding:5px;
+}
+/*classes*/
+
+/*id*/
+#installbox {
+	width:800px;
+	height:auto !important;
+	min-height:700px;
+	height:700px;
+	margin:0 auto;	
+}
+	#install {
+		width:800px;
+		width:760px/*ie*/;
+		height:auto !important;
+		min-height:700px;
+		height:700px;
+		float:left;
+		border:1px solid #D2D2D2;
+		background:white;
+		margin-top:50px;
+		margin-bottom:50px;
+		padding:20px;	
+	}
+	#header {
+		width:760px;
+		height:50px;
+		float:left;
+	}
+		#logo {
+			width:160px;
+			height:50px;
+			float:left;
+		}
+		#slogan {
+			width:600px;
+			height:50px;
+			height:35px/*ie*/;
+			float:right;
+			text-align:right;
+			font-size:18px;
+			color:#898989;
+			font-weight:lighter;
+			padding-top:15px;
+		}
+		#content {
+			width:760px;
+			height:auto !important;
+			min-height:650px;
+			height:650px;
+			float:left;
+			border-top:1px solid #E5E5E5;
+			border-bottom:1px solid #E5E5E5;
+			margin-bottom:20px;
+			margin-top:20px;
+			padding-top:15px;
+			padding-bottom:15px;
+		}
+			#content h1 {
+				font-size:18px;
+				color:black;
+				font-weight:lighter;
+				padding-bottom:20px;
+			}
+			#content h2 {
+				font-size:16px;
+				font-weight:bold;
+				color:#585858;
+				padding-top:10px;
+				padding-bottom:10px;
+			}
+			#content p {
+				font-size:14px;
+				font-family:Arial, Tahoma, Sans serif;
+				padding-bottom:10px;
+				line-height:120%;
+			}
+		#error {
+			font-size:14px;
+			color:#CB0000;
+		}
+			#error h2 {
+				color:#CB0000;
+				font-size:18px;
+				font-weight:lighter;
+			}
+			#error p {
+				color:#CB0000;
+			}	
+		#footer {
+			width:760px;
+			height:20px;
+			float:left;
+		}
+			#footer_left {
+				width:50%;
+				height:20px;
+				font-size:11px;
+				color:#585858;
+				float:left;
+			}
+			#footer_right {
+				width:50%;
+				height:20px;
+				float:right;
+				text-align:right;
+			}

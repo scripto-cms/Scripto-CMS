@@ -1,0 +1,561 @@
+{if $m_action=='addtype' || $m_action=="addvalue" || $m_action=='' || $m_action=="view_types" || $m_action=="quickedit" || $m_action=='gallery' || $m_action=='videogallery' || $m_action=='objectsgallery' || $m_action=='dialogobject' || $m_action=='files' || $m_action=='categoriestype'}
+	{if $m_action=='addtype' || $m_action=="addvalue"}
+		{$form_html}
+	{elseif $m_action=='categoriestype'}
+	{if $save}
+		<script>
+			parent.tooltip('','Данные сохранены!',3000);
+		</script>
+	{/if}
+	<p>Выберите разделы, в которых добавлять объекты типа {$type.caption}.</p>
+<form id="frm" action="" method="post">
+<table width="100%" id="mods">
+<tr height="30">
+	<td width="10%" class="shapka"></td>
+	<td width="90%" class="shapka">Название раздела</td>
+</tr>
+{if $categories}
+{foreach key=key item=category from=$categories}
+<tr class="hover" id="cat{$category.id_category}">
+	<td class="info" align="center"><input type="checkbox" name="id_cat[{$category.id_category}]" {if $category.type}checked{/if}></td>
+	<td class="info" style="padding-left: {math equation="x * y" x="7" y=$category.level}px;"><a href="{$category.url}" target="_blank">{$category.caption}</a></td>
+</tr>
+{/foreach}
+<input type="hidden" name="save" value="1">
+<tr>
+	<td colspan="2" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+</tr>
+{/if}
+</table>
+</form>	
+	{elseif $m_action=="dialogobject"}
+{if !$get_rubrics}
+	{include file="admin/usermodules/objects/previewlist.tpl.html"}
+{else}
+{if $multiple=="no"}
+<input type="hidden" id="multiple" value="{$multiple}">
+{/if}
+<table class="moduletable">
+	<tr>
+	<td>
+	<table class="moduletable">
+	<tr>
+		<td class="module_left">
+			<div class="image_list">
+			{include file="admin/usermodules/objects/menu.tpl.html"}
+			</div>
+		</td>
+		<td class="module_right">
+			<div class="image_list">
+				<div class="body" id="changepreviewlist">
+					{include file="admin/usermodules/objects/previewlist.tpl.html"}
+				</div>
+			</div>
+		</td>
+	</tr>
+	</table>
+	</td>
+	</tr>
+</table>
+<div class="image_buttons">
+	<table width="100%">
+		<tr>
+			<td width="50%" align="left"><input type="button" value="удалить текущий объект" id="deleteImage"></td>
+			<td width="50%" align="right"><input type="button" value="выбрать объект" id="selectImage"></td>
+		</tr>
+	</table>
+	<input type="hidden" id="type" value="object">
+	<input type="hidden" id="mode" value="{$mode}">
+	<input type="hidden" id="ref" value="{$ref}">
+	<input type="hidden" id="mode" value="{$object.id_object}">	
+</div>
+{/if}	
+	{elseif $m_action=="files"}
+	<h2>Загрузка файлов для объекта {$object.caption}</h2>
+	<div class="body">
+		<div id="filesbutton" class="actionbutton" idobject="{$object.id_object}">Загрузить файл</div>
+	</div>
+<div class="body">
+			{if $object.files}
+					<form action="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=files&id_object={$object.id_object}&sort_me=yes" method="post" id="objects_form">
+					<table class="pictures">
+					<tr>
+						<td class="objects_header" width="40%">Имя файла</td>
+						<td class="objects_header" width="20%">Скачан</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+					</tr>
+					{foreach key=key item=obj from=$object.files}
+					<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="file{$obj.id_file}">
+						<td id="preview{$obj.id_file}"><a href="{$user_upload}files/{$obj.filename}" target="blank">{$obj.filename} ({$obj.size})</a></td>
+						<td align="center">{$obj.downloaded}</td>
+						<td align="center"><input type="text" name="sort[{$obj.id_file}]" class="textbox" value="{$obj.sort}" size="3"></td>
+						<td align="center"><input type="checkbox" name="del[{$obj.id_file}]" class="deletecheckbox" numb="0"></td>
+					</tr>
+					{/foreach}
+					</table>
+					<table class="pictures2">
+						<tr>
+							<td width="40%"></td>
+							<td width="20%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+					</table>
+					</form>						
+			{else}
+			<p class="toDel">Для данного объекта еще не загружено файлов</p>
+					<form action="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=files&id_object={$object.id_object}&sort_me=yes" method="post" id="objects_form">	
+					<table class="pictures nonvisible">
+					<tr>
+						<td class="objects_header" width="40%">Имя файла</td>
+						<td class="objects_header" width="20%">Скачан</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+					</tr>
+					</table>
+					<table class="pictures2 nonvisible">
+						<tr>
+							<td width="40%"></td>
+							<td width="20%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+						</table>
+					</form>					
+			{/if}
+		</div>	
+	{elseif $m_action=="objectsgallery"}		
+		<h2>Галерея объектов объекта {$object.caption}</h2>
+		<div class="body">
+			<div class="actionbutton"><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=dialogobject&id_object={$object.id_object}&ajax=true&get_rubrics=true&mode=new" class="change">Добавить новый объект</a></div>
+		</div>
+		<div class="body">
+			{if $object.objects}
+					<form action="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=objectsgallery&id_object={$object.id_object}&sort_me=yes" method="post" id="objects_form">
+					<table class="pictures">
+					<tr>
+						<td class="objects_header" width="40%">Название</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+						<td class="objects_header" width="20%" align="center">Действия</td>
+					</tr>
+					{foreach key=key item=type from=$object.objects}
+					{foreach key=key item=obj from=$type}
+					<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="obj{$obj.id_object}">
+						<td id="preview{$obj.id_object}">{$obj.caption}</td>
+						<td align="center"><input type="text" name="sort[{$obj.id_object}]" class="textbox" value="{$obj.sort}" size="3"></td>
+						<td align="center"><input type="checkbox" name="del[{$obj.id_object}]" class="deletecheckbox" numb="0"></td>
+						<td align="center"><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=dialogobject&id_object={$object.id_object}&ajax=true&get_rubrics=true&mode={$obj.id_object}" class="change">изменить</a></td>
+					</tr>
+					{/foreach}
+					{/foreach}
+					</table>
+					<table class="pictures2">
+						<tr>
+							<td width="40%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+							<td width="20%"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+					</table>
+					</form>						
+			{else}
+			<p class="toDel">Для данного объекта еще не загружено объектов</p>
+					<form action="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=objectsgallery&id_object={$object.id_object}&sort_me=yes" method="post" id="objects_form">	
+					<table class="pictures nonvisible">
+					<tr>
+						<td class="objects_header" width="40%">Название</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+						<td class="objects_header" width="20%" align="center">Действия</td>
+					</tr>
+					</table>
+					<table class="pictures2 nonvisible">
+						<tr>
+							<td width="40%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+							<td width="20%"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+						</table>
+					</form>					
+			{/if}
+		</div>		
+	{elseif $m_action=="videogallery"}
+		<h2>Галерея видео объекта {$object.caption}</h2>
+		<div class="body">
+			<div class="actionbutton"><a href="{$siteurl}admin/?module=objects&modAction=changepreview&ajax=true&mode=new&id_category={$object.id_category}&get_rubrics=true&type=video" class="change">Добавить новое видео</a></div>
+		</div>
+		<div class="body">
+			{if $object.videos}
+					<form action="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=videogallery&id_object={$object.id_object}&sort_me=yes" method="post" id="objects_form">
+					<table class="pictures">
+					<tr>
+						<td class="objects_header" width="40%">Видеофайл</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+						<td class="objects_header" width="20%" align="center">Действия</td>
+					</tr>
+					{foreach key=key item=video from=$object.videos}
+					<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="video{$video.id_video}">
+						<td id="preview{$video.id_video}"><a href="{$siteurl}admin/?module=objects&modAction=viewvideo&id_video={$video.id_video}&ajax=true" class="video">{$video.caption}</a></td>
+						<td align="center"><input type="text" name="sort[{$video.id_video}]" class="textbox" value="{$video.sort}" size="3"></td>
+						<td align="center"><input type="checkbox" name="del[{$video.id_video}]" class="deletecheckbox" numb="0"></td>
+						<td align="center"><a href="{$siteurl}admin/?module=objects&modAction=changepreview&ajax=true&mode={$video.id_video}&id_category={$object.id_category}&get_rubrics=true&type=video" class="change">изменить</a></td>
+					</tr>
+					{/foreach}
+					</table>
+					<table class="pictures2">
+						<tr>
+							<td width="40%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+							<td width="20%"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+					</table>
+					</form>						
+			{else}
+			<p class="toDel">Для данного объекта еще не загружено видео</p>
+					<form action="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=videogallery&id_object={$object.id_object}&sort_me=yes" method="post" id="objects_form">	
+					<table class="pictures nonvisible">
+					<tr>
+						<td class="objects_header" width="40%">Видеофайл</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+						<td class="objects_header" width="20%" align="center">Действия</td>
+					</tr>
+					</table>
+					<table class="pictures2 nonvisible">
+						<tr>
+							<td width="40%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+							<td width="20%"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+						</table>
+					</form>					
+			{/if}
+		</div>	
+	{elseif $m_action=='gallery'}
+		<h2>Галерея изображений объекта {$object.caption}</h2>
+		<div class="body">
+			<div class="actionbutton"><a href="{$siteurl}admin/?module=objects&modAction=changepreview&ajax=true&mode=new&id_category={$object.id_category}&get_rubrics=true&multiple=yes" class="change">Добавить новое изображение</a></div>
+		</div>
+		<div class="body">
+			{if $object.images}
+					<form action="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=gallery&id_object={$object.id_object}&sort_me=yes" method="post" id="objects_form">
+					<table class="pictures">
+					<tr>
+						<td class="objects_header" width="40%">Изображение</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+						<td class="objects_header" width="20%" align="center">Действия</td>
+					</tr>
+					{foreach key=key item=image from=$object.images}
+					<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="img{$image.id_image}">
+						<td id="preview{$image.id_image}"><a href="{$siteurl}admin/?module=objects&amp;modAction=crop&amp;id_photo={$image.id_image}&amp;ajax=true" class="crop"><img src="{$user_thumbnails}{$image.small_preview}" border="0"></td>
+						<td align="center"><input type="text" name="sort[{$image.id_image}]" class="textbox" value="{$image.sort}" size="3"></td>
+						<td align="center"><input type="checkbox" name="del[{$image.id_image}]" class="deletecheckbox" numb="0"></td>
+						<td align="center"><a href="{$siteurl}admin/?module=objects&modAction=changepreview&ajax=true&mode={$image.id_image}&id_category={$object.id_category}&get_rubrics=true" class="change">изменить</a></td>
+					</tr>
+					{/foreach}
+					</table>
+					<table class="pictures2">
+						<tr>
+							<td width="40%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+							<td width="20%"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+					</table>
+					</form>						
+			{else}
+			<p class="toDel">Для данного объекта еще не загружено изображений</p>
+					<form action="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=gallery&id_object={$object.id_object}&sort_me=yes" method="post" id="objects_form">	
+					<table class="pictures nonvisible">
+					<tr>
+						<td class="objects_header" width="40%">Изображение</td>
+						<td class="objects_header" width="15%">Сортировка</td>
+						<td class="objects_header" width="15%">Удалить</td>
+						<td class="objects_header" width="20%" align="center">Действия</td>
+					</tr>
+					</table>
+					<table class="pictures2 nonvisible">
+						<tr>
+							<td width="40%"></td>
+							<td width="15%"></td>
+							<td width="15%" class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="0"></td>
+							<td width="20%"></td>
+						</tr>
+						<tr id="save_submit">
+							<td colspan="4" align="center" style="padding-top:10px;"><input type="submit" value="Сохранить" class="button"></td>
+						</tr>
+						</table>
+					</form>					
+			{/if}
+		</div>
+	{elseif $m_action=='quickedit'}
+		{if $save}
+		 <script>
+ 			parent.tooltip('','Изменения сохранены!',3000);
+		 </script>
+		{/if}
+		{if $close}
+		<script>
+		{literal}
+			parent.show_close_dialog=false;
+			parent.$.fancybox.close();
+		{/literal}
+		</script>
+		{/if}
+<form action="" name="frm" method="post">
+<table width="100%" cellpadding="0" cellspacing="0" class="whiteheader">
+	<tr>
+		<td width="50%">Содержимое объекта <b>{$object.caption}</b></td>
+		<td width="50%" align="right"><input type="submit" value="Сохранить изменения"></td>
+	</tr>
+</table>
+<input type="hidden" name="id_object" value="{$object.id_object}">
+<input type="hidden" name="save" value="yes">
+<input type="hidden" name="close" value="1">
+{$editor}
+</form>	
+	{else}
+			<div class="body">
+				<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=addtype');">Новый тип</div>
+			</div>
+			<div class="body">
+				{if $types}
+					<table class="objects">
+					<tr>
+						<td class="objects_header" width="40%">Название</td>
+						<td class="objects_header" width="30%">Идентификатор</td>
+						<td class="objects_header" width="20%">Создан</td>
+						<td class="objects_header" width="10%" align="right">Действия</td>
+					</tr>
+					{foreach key=key item=type from=$types}
+					<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="type{$type.id_type}">
+						<td>{if $type.new>0}<b>{$type.caption}</b> <i>({$type.new} новых){else}{$type.caption}{/if}</td>
+						<td>{$type.ident}</td>
+						<td>{$type.create_print}</td>
+						<td class="actions" align="right">		
+							<ul>
+								{if $type.user_add}
+								<li><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=categoriestype&id_type={$type.id_type}&ajax=yes" title="Выбрать разделы, в которые добавлять объекты типа {$type.caption}" class="dialog"><img src="{$img}admin/menu.png" border="0"></a></li>
+								{/if}							
+								<li><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=addtype&mode=edit&id_type={$type.id_type}" title="Редактировать тип {$type.caption}"><img src="{$img}admin/icons/edit.gif" border="0"></a></li>
+								<li><a href="javascript:void(0);" onclick="YesNo('Удалить тип {$type.caption}?','{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=deletetype&mode=edit&id_type={$type.id_type}');" title="Удалить тип {$type.caption}"><img src="{$img}admin/icons/delete.gif"  border="0"></a></li>
+								<li><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=view&id_type={$type.id_type}" title="Просмотреть объекты типа {$type.caption}"><img src="{$img}admin/icons/cube_blue.gif"></a></li>
+							</ul>
+						</td>						
+					</tr>	
+					{/foreach}
+					</table>
+				{else}
+					<p>На данный момент не создано ни одного типа объектов.</p>
+				{/if}
+			</div>	
+	{/if}
+{else}
+<table class="moduletable">
+	<tr>
+		<td class="module_left">
+			{foreach key=key item=position from=$rubrics}
+			{foreach key=key item=category from=$position}
+			{if $category.caption}
+			{if $id_category==$category.id_category}
+				<p style="padding-left:{math equation="x*7" x=$category.level}px;"><b>{$category.caption} {if $category.objects}[{$category.objects}]{/if}</b>&nbsp;&nbsp;<a href="{$siteurl}admin/?module=catalog&modAction=add&id_cat={$category.id_category}&ajax=yes&mod_name=objects" title="{$lang.interface.add_category}" class="dialog"><img src="{$img}admin/icons/add_16.gif" width="12"></a></p>
+			{else}
+				<p style="padding-left:{math equation="x*7" x=$category.level}px;"><a href="{$siteurl}admin/?module=modules&module_name=objects&m_action=view&modAction=settings&id_category={$category.id_category}&id_type={$type.id_type}" {if $category.visible==0}class="nvisible"{/if}>{$category.caption}</a> {if $category.objects}[{$category.objects}]{/if}&nbsp;&nbsp;<a href="{$siteurl}admin/?module=catalog&modAction=add&id_cat={$category.id_category}&ajax=yes&mod_name=objects" title="{$lang.interface.add_category}" class="dialog"><img src="{$img}admin/icons/add_16.gif" width="12"></a></p>
+			{/if}
+			{/if}
+			{/foreach}
+			{/foreach}
+		</td>
+		<td class="module_right">
+			<div class="body">
+				{if $id_category}
+				<h2>Просмотр {if $type.view_all_text}{$type.view_all_text}{else}объектов{/if} из раздела {$cat.caption}</h2>
+							{if $ppath}
+							<div id="submodule_path">
+								{foreach key=key item=mod from=$ppath}
+									{if $mod.is_last==false}
+									<li>{if $mod.url}<a href="{$siteurl}admin/?module=modules&module_name=objects&m_action=view&modAction=settings&id_category={$mod.id_category}&id_type={$type.id_type}">{$mod.caption}</a>{else}{$mod.caption}{/if}</li>
+										<li>></li>
+										{else}
+										<li>{$mod.caption}</li>
+									{/if}
+								{/foreach}
+							</div>
+							{/if}
+				{/if}
+			</div>
+			{if $id_category}
+			<div class="body">
+				<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=addvalue&id_type={$type.id_type}&id_category={$id_category}');">Добавить {$type.add_text}</div>
+				<div class="actionbutton" onclick="goTo('{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=view&id_type={$type.id_type}');">Новые {if $type.view_all_text}{$type.fulllink_text}{else}объекты{/if}</div>
+				<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=objects" method="post" id="search_form">
+				<div id="searchbox"><table><tr><td width="90%"><input type="text" name="str" value="{$str}" class="sbox"></td><td><input type="image" src="{$siteurl}images/admin/s_icon.jpg"></td></tr></table></div>
+				<input type="hidden" name="m_action" value="view">
+				<input type="hidden" name="id_type" value="{$type.id_type}">
+				<input type="hidden" name="id_category" value="{$id_category}">
+				</form>
+			</div>
+			{/if}
+			<div class="body">
+					{if $objects}
+					<p align="right">
+					Выберите страницу:
+					{foreach key=key item=p from=$pages}
+						{if $p==$pagenumber}
+							<b>{$p+1}</b>
+						{else}
+							<a href="{$siteurl}admin/?module=modules&module_name=objects&m_action=view&modAction=settings&id_category={$id_category}&id_type={$type.id_type}&p={$p}{if $str_url!=''}&str={$str_url}{/if}">{$p+1}</a>
+						{/if}
+					&nbsp;
+					{/foreach}
+					</p>
+					<form action="{$siteurl}admin?module=modules&modAction=settings&module_name=objects&id_type={$type.id_type}&id_category={$id_category}" method="post" id="objects_form">
+					<table class="objects">
+					<tr>
+						{if $type.small_preview || $type.medium_preview}
+							<td class="objects_header" width="9%">Изображение</td>
+							{if $type.use_code}
+								<td class="objects_header editable_header" width="20%"><span>Название</span></td>
+								<td class="objects_header" width="20%">Код</td>												
+							{else}
+								<td class="objects_header editable_header" width="40%"><span>Название</span></td>
+							{/if}						
+						{else}
+							{if $type.use_code}
+								<td class="objects_header editable_header" width="30%"><span>Название</span></td>
+								<td class="objects_header" width="20%">Код</td>												
+							{else}
+								<td class="objects_header editable_header" width="50%"><span>Название</span></td>
+							{/if}
+						{/if}						
+						{if $type.full_content}
+						<td class="objects_header" width="1%"></td>
+						<td class="objects_header" width="7%">Просмотров</td>
+						{else}
+						<td class="objects_header" width="8%">Просмотров</td>
+						{/if}
+						{if $id_category}
+						<td class="objects_header" width="10%">Создан</td>
+						{else}
+						<td class="objects_header editable_header" width="10%"><span>Утвердить</span></td>
+						{/if}
+						<td class="objects_header editable_header" width="8%"><span>Видимость</span></td>
+						<td class="objects_header editable_header" width="8%"><span>Удалить</span></td>						
+						<td class="objects_header" width="17%" align="right">Действия</td>
+					</tr>
+					{foreach key=key item=obj from=$objects}
+					<tr class="{cycle values="objects_cell_light,objects_cell_bold"}" id="obj{$obj.id_object}">
+						{if $type.small_preview || $type.medium_preview}
+						<td align="center">
+							{if $obj.small_preview!='' && $obj.middle_preview!=''}
+								<img src="{$user_thumbnails}{$obj.small_preview}" class="imgpreview">
+							{else}
+								{if $obj.small_preview}
+									<img src="{$user_thumbnails}{$obj.small_preview}" class="imgpreview">
+								{/if}
+								{if $obj.middle_preview}
+									<img src="{$user_thumbnails}{$obj.middle_preview}" class="imgpreview">
+								{/if}
+							{/if}
+						</td>
+						{/if}
+						<td class="editable"><span>{if $obj.new}<b>{$obj.caption}</b>{else}{$obj.caption}{/if}</span><input type="text" name="caption[{$obj.id_object}]" value="{$obj.caption}" class="nonvisible"></td>
+						{if $type.use_code}
+						<td>{$obj.code}</td>
+						{/if}
+						{if $type.full_content}
+						<td><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=quickedit&id_object={$obj.id_object}&ajax=yes" class="editor"><img src="{$admin_icons}quickedit.png" border="0"></a></td>
+						{/if}
+						<td>{$obj.views}</td>
+						{if $id_category}
+						<td>{$obj.create_print}</td>
+						{else}
+						<td align="center"><input type="checkbox" name="new[{$obj.id_object}]" class="checkbox" numb="2"></td>
+						{/if}
+						<td align="center"><input type="checkbox" name="vis[{$obj.id_object}]" {if $obj.visible}checked{/if} class="checkbox" numb="0"></td>
+						<td align="center"><input type="checkbox" name="del[{$obj.id_object}]" class="deletecheckbox" numb="1"></td>
+						<td class="actions" align="right">
+							<ul>
+								<li><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=addvalue&mode=edit&id_type={$type.id_type}&id_object={$obj.id_object}&id_category={$obj.id_category}" title="Редактировать {$obj.caption}"><img src="{$img}admin/icons/edit.gif" border="0"></a></li>			
+								{if $type.use_gallery}
+								<li><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=gallery&id_object={$obj.id_object}" title="Создать галерею для объекта {$obj.caption}"><img src="{$img}admin/icons/picture_link.png" border="0"></a></li>											
+								{/if}	
+								{if $type.use_videogallery}
+								<li><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=videogallery&id_object={$obj.id_object}" title="Создать видео галерею для объекта {$obj.caption}"><img src="{$img}admin/icons/videos.png" border="0"></a></li>											
+								{/if}											
+								{if $type.use_objects}
+								<li><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=objectsgallery&id_object={$obj.id_object}" title="Выбрать рекомендуемые объекты для объекта {$obj.caption}"><img src="{$img}admin/icons/objects.png" border="0"></a></li>											
+								{/if}
+								{if $type.use_files}
+								<li><a href="{$siteurl}admin/?module=modules&module_name=objects&modAction=settings&m_action=files&id_object={$obj.id_object}" title="Загрузить файлы для объекта {$obj.caption}"><img src="{$img}admin/icons/files.png" border="0"></a></li>											
+								{/if}																
+							</ul>
+						</td>
+					</tr>
+					<input type="hidden" name="idobject[{$obj.id_object}]" value="{$obj.id_object}">
+					{/foreach}
+					<input type="hidden" name="p" value="{$pagenumber}">
+					{if $str!=''}
+					<input type="hidden" name="str" value="{$str}">
+					{/if}
+					<input type="hidden" name="m_action" value="save">
+					<tr>
+						{if $type.small_preview || $type.medium_preview}
+						<td></td>
+						{/if}
+						<td colspan="{if !$id_category}{if $type.use_code}3{else}2{/if}{else}{if $type.use_code}4{else}3{/if}{/if}"></td>
+						{if $type.full_content}
+						<td></td>
+						{/if}
+						{if !$id_category}
+						<td class="selectall" align="center"><input type="checkbox" numb="2"></td>
+						{/if}
+						<td class="selectall" align="center"><input type="checkbox" numb="0"></td>
+						<td class="selectall" align="center"><input type="checkbox" class="deletecheckbox" numb="1"></td>
+						<td></td>
+					</tr>
+					<tr id="save_submit">
+						<td colspan="9" align="center"><input type="submit" value="Сохранить" class="button"></td>
+					</tr>
+					</table>
+					</form>
+					{else}
+					{if $str!=''}
+					<p>По заданному поисковому запросу не найдено результатов</p>
+					{else}
+					<p>В данном разделе нет объектов для просмотра</p>
+					{/if}
+					{/if}			
+			</div>
+		</td>
+	</tr>
+</table>
+{/if}

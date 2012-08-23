@@ -1,0 +1,15 @@
+<form id="frm">
+<h2 style="padding-top:15px;">Изменений свойств объектов</h2>
+<div id="change">
+<p>Выделите объекты , у которых хотите изменить свойства и нажмите кнопку "Изменить"</p>
+<p>
+<p class="otstup_caption"><input type="checkbox" name="do_visible">&nbsp;&nbsp;<b>Изменить видимость:</b> &nbsp;<input type="radio" name="visible_value" value="1" checked>Сделать видимым &nbsp;<input type="radio" name="visible_value" value="0">Скрыть</p>
+<p class="otstup_caption"><input type="checkbox" name="do_main">&nbsp;&nbsp;<b>Поместить на главную:</b>&nbsp;<input type="radio" name="main_value" value="1">Да&nbsp;<input type="radio" name="main_value" value="0" checked>нет</p>
+<p class="otstup_caption"><input type="checkbox" name="do_title">&nbsp;&nbsp;<b>Изменить title:</b>&nbsp;<input type="text" name="title_value" value="" size="30"></p>
+<p class="otstup_caption"><input type="checkbox" name="do_thumbnails">&nbsp;&nbsp;<b>Изменить превью (только для изображений):</b></p>
+<p style="padding-top:2px;padding-bottom:3px;">Маленькое: <input type="text" size="3" name="minx_value" value="{$settings.small_x}">x<input type="text" size="3" name="miny_value" value="{$settings.small_y}"> пикселей</p>
+<p style="padding-top:2px;padding-bottom:3px;">Среднее: <input type="text" size="3" name="mediumx_value" value="{$settings.medium_x}">x<input type="text" size="3" name="mediumy_value" value="{$settings.medium_y}"> пикселей</p>
+</p>
+<input type="button" class="button" value="Изменить" onclick="YesNoAjaxForm('Изменить свойства выбранных объектов?','{$siteurl}admin/?module=objects&modAction=change&ajax=true&modType={$modType}&white=true&id_cat={$this_cat.id_category}','module','frm');" style="font-size:12px;">
+</div>
+</form>
