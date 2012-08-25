@@ -19,7 +19,7 @@ $install_sql[]="CREATE TABLE `%PUBLICATIONS%` (
 `sort` BIGINT NULL default 0,
 PRIMARY KEY ( `id_publication` ) ,
 INDEX ( `caption` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="insert into `%block_types%` values (null,'Последние публикации','lastpublications','publications',1);";
 /*
 Добавляем раздел публикации

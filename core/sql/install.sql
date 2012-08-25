@@ -30,7 +30,7 @@ CREATE TABLE `%prefix%categories` (
 PRIMARY KEY ( `id_category` ) ,
 FULLTEXT ( `ident` ),
 FULLTEXT ( `caption` )
-);
+) ENGINE=MyISAM;
 
 CREATE INDEX category_id_category USING BTREE ON `%prefix%categories` (id_category);
 CREATE INDEX category_id_sub_category USING BTREE ON `%prefix%categories` (id_sub_category);
@@ -61,7 +61,7 @@ CREATE TABLE `%prefix%photos` (
 `small_info` VARCHAR( 255 ) NULL ,
 PRIMARY KEY ( `id_photo` ) ,
 INDEX ( `caption` )
-);
+) ENGINE=MyISAM;
 
 CREATE INDEX photos_id_category USING BTREE ON `%prefix%photos` (id_category);
 CREATE INDEX photos_id_photo USING BTREE ON `%prefix%photos` (id_photo);
@@ -89,7 +89,7 @@ CREATE TABLE `%prefix%settings` (
 `ips` MEDIUMTEXT null default '',
 `servercode` VARCHAR( 200 ) NOT NULL default '',
 `module_notes` INT NOT NULL default 1
-);
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `%prefix%videos` (
@@ -109,7 +109,7 @@ CREATE TABLE `%prefix%videos` (
 `external_url` VARCHAR( 255 ) NULL ,
 PRIMARY KEY ( `id_video` ) ,
 INDEX ( `caption` )
-);
+) ENGINE=MyISAM;
 
 CREATE INDEX videos_id_category USING BTREE ON `%prefix%videos` (id_category);
 CREATE INDEX videos_id_video USING BTREE ON `%prefix%videos` (id_video);
@@ -132,7 +132,7 @@ CREATE TABLE `%prefix%audio` (
 `external_url` VARCHAR( 255 ) NULL ,
 PRIMARY KEY ( `id_audio` ) ,
 INDEX ( `caption` )
-);
+) ENGINE=MyISAM;
 
 CREATE INDEX audio_id_category USING BTREE ON `%prefix%audio` (id_category);
 CREATE INDEX audio_id_audio USING BTREE ON `%prefix%audio` (id_audio);
@@ -152,7 +152,7 @@ CREATE TABLE `%prefix%flash` (
 `external_url` VARCHAR( 255 ) NULL ,
 PRIMARY KEY ( `id_flash` ) ,
 INDEX ( `caption` )
-);
+) ENGINE=MyISAM;
 
 CREATE INDEX flash_id_category USING BTREE ON `%prefix%flash` (id_category);
 CREATE INDEX flash_id_flash USING BTREE ON `%prefix%flash` (id_flash);
@@ -167,7 +167,7 @@ CREATE TABLE `%prefix%objects` (
 `create` TIMESTAMP NOT NULL,
 PRIMARY KEY ( `id_object` ) ,
 INDEX ( `caption` )
-);
+) ENGINE=MyISAM;
 
 CREATE INDEX objects_id_object USING BTREE ON `%prefix%objects` (id_object);
 
@@ -185,7 +185,7 @@ CREATE TABLE `%prefix%templates` (
 `tpl_theme` VARCHAR(255) NOT NULL default 'default',
 `tpl_css` VARCHAR(255) NOT NULL default 'style.css',
 PRIMARY KEY ( `id_tpl` )
-);
+) ENGINE=MyISAM;
 
 CREATE INDEX templates_id_template USING BTREE ON `%prefix%templates` (id_tpl);
 
@@ -214,7 +214,7 @@ CREATE TABLE `%prefix%blocks` (
 `sort` BIGINT NOT NULL default 0,
 PRIMARY KEY ( `id_block` ) ,
 FULLTEXT ( `caption` )
-);
+) ENGINE=MyISAM;
 
 CREATE INDEX blocks_id_block USING BTREE ON `%prefix%blocks` (id_block);
 CREATE INDEX blocks_id_category USING BTREE ON `%prefix%blocks` (id_category);
@@ -228,7 +228,7 @@ CREATE TABLE `%prefix%block_types` (
 `cache` INT NOT NULL default 1,
 PRIMARY KEY ( `id_type` ) ,
 FULLTEXT ( `caption` )
-);
+) ENGINE=MyISAM;
 
 insert into `%prefix%block_types` values(null,'Текстовая информация','text','',0);
 insert into `%prefix%block_types` values(null,'Текстовые блоки','texts','',0);
@@ -240,7 +240,7 @@ CREATE INDEX blocktypes_id_type USING BTREE ON `%prefix%block_types` (id_type);
 CREATE TABLE `%prefix%block_categories` (
 `id_block` BIGINT NOT NULL ,
 `id_cat` BIGINT NOT NULL
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE `%prefix%block_text` (
 `id_text` BIGINT NOT NULL AUTO_INCREMENT ,
@@ -249,7 +249,7 @@ CREATE TABLE `%prefix%block_text` (
 `content` MEDIUMTEXT,
 PRIMARY KEY ( `id_text` ) ,
 INDEX ( `caption` )
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE `%prefix%block_rss` (
 `id_rss` BIGINT NOT NULL AUTO_INCREMENT ,
@@ -259,13 +259,13 @@ CREATE TABLE `%prefix%block_rss` (
 `rss_number` MEDIUMINT NOT NULL default 10,
 PRIMARY KEY ( `id_rss` ) ,
 INDEX ( `rss_caption` )
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE `%prefix%categories_modules` (
 `name_module` VARCHAR(255) NOT NULL ,
 `id_category` BIGINT NOT NULL ,
 FULLTEXT ( `name_module` )
-);
+) ENGINE=MyISAM;
 
 CREATE INDEX modules_id_category USING BTREE ON `%prefix%categories_modules` (id_category);
 
@@ -273,7 +273,7 @@ CREATE TABLE `%prefix%static_modules` (
 `mod_name` VARCHAR( 255 ) NOT NULL,
 `prioritet` INT NOT NULL default 1,
 FULLTEXT ( `mod_name` )
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE `%prefix%reminders` (
 `id_reminder` BIGINT NOT NULL AUTO_INCREMENT ,
@@ -284,7 +284,7 @@ CREATE TABLE `%prefix%reminders` (
 `show` INT NOT NULL default 0,
 PRIMARY KEY ( `id_reminder` ),
 FULLTEXT ( `subject` )
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE `%prefix%notes` (
 `id_note` BIGINT NOT NULL AUTO_INCREMENT ,
@@ -294,7 +294,7 @@ CREATE TABLE `%prefix%notes` (
 `date_create` DATETIME NOT NULL,
 PRIMARY KEY ( `id_note` ),
 FULLTEXT ( `caption` )
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE `%prefix%process` (
 `id_process` BIGINT NOT NULL AUTO_INCREMENT ,
@@ -304,7 +304,7 @@ CREATE TABLE `%prefix%process` (
 `done` INT NOT NULL DEFAULT 0,
 `date_done` DATETIME NULL,
 PRIMARY KEY ( `id_process` )
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE `%prefix%buttons` (
 `id_button` BIGINT NOT NULL AUTO_INCREMENT ,
@@ -314,7 +314,7 @@ CREATE TABLE `%prefix%buttons` (
 `open_type` INT NOT NULL DEFAULT 0,
 `sort` BIGINT NOT NULL DEFAULT 0,
 PRIMARY KEY ( `id_button` )
-);
+) ENGINE=MyISAM;
 
 CREATE TABLE `%prefix%languages` (
 `id_language` BIGINT NOT NULL AUTO_INCREMENT ,
@@ -322,7 +322,7 @@ CREATE TABLE `%prefix%languages` (
 `ident` VARCHAR( 25 ) NOT NULL,
 `caption` VARCHAR( 250 ) NOT NULL,
 PRIMARY KEY ( `id_language` )
-);
+) ENGINE=MyISAM;
 
 CREATE INDEX languages_id_language USING BTREE ON `%prefix%languages` (id_language);
 

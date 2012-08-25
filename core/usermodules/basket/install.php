@@ -20,20 +20,20 @@ $install_sql[]="CREATE TABLE `%ORDERS%` (
 `discount_itog` DECIMAL NULL default 0 ,
 `view` INT NOT NULL ,
 PRIMARY KEY ( `id_order` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%DELIVERY%` (
 `id_delivery` BIGINT NOT NULL AUTO_INCREMENT ,
 `caption` VARCHAR( 250 ) NOT NULL ,
 `price` DECIMAL NOT NULL ,
 `description` LONGTEXT,
 PRIMARY KEY ( `id_delivery` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%PAYMENT%` (
 `id_payment` BIGINT NOT NULL AUTO_INCREMENT ,
 `caption` VARCHAR( 250 ) NOT NULL ,
 `description` LONGTEXT,
 PRIMARY KEY ( `id_payment` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%ORDER_PRODUCTS%` (
 `id_order` BIGINT NOT NULL ,
 `caption` VARCHAR( 250 ) NOT NULL ,
@@ -42,7 +42,7 @@ $install_sql[]="CREATE TABLE `%ORDER_PRODUCTS%` (
 `code` VARCHAR( 250 ) NOT NULL ,
 `price` BIGINT NOT NULL default 0,
 `count` BIGINT NOT NULL 
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%DISCOUNTS%` (
 `id_discount` BIGINT NOT NULL AUTO_INCREMENT ,
 `caption` VARCHAR(255) NOT NULL ,
@@ -51,18 +51,18 @@ $install_sql[]="CREATE TABLE `%DISCOUNTS%` (
 `price` DECIMAL NOT NULL,
 `active` INT NOT NULL ,
 PRIMARY KEY ( `id_discount` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%LOGIN_DISCOUNTS%` (
 `id_discount` BIGINT NOT NULL ,
 `login` VARCHAR(255) NOT NULL
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%OPT%` (
 `id_opt` BIGINT NOT NULL AUTO_INCREMENT ,
 `from` DECIMAL NOT NULL ,
 `percent` INT NOT NULL default 0,
 `active` INT NOT NULL ,
 PRIMARY KEY ( `id_opt` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 /*
 Получаем идентификатор главного раздела
 */

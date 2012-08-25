@@ -21,7 +21,7 @@ $install_sql[]="CREATE TABLE `%FORMS%` (
 `start_value` INT NOT NULL default 0,
 PRIMARY KEY ( `id_form` ) ,
 INDEX ( `caption` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%FORMS_INPUT%` (
 `id_input` BIGINT NOT NULL AUTO_INCREMENT ,
 `id_form` BIGINT NOT NULL,
@@ -36,7 +36,7 @@ $install_sql[]="CREATE TABLE `%FORMS_INPUT%` (
 `tooltip` VARCHAR( 250 ) NOT NULL,
 PRIMARY KEY ( `id_input` ) ,
 INDEX ( `caption` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%INPUT_VALUES%` (
 `id_value` BIGINT NOT NULL AUTO_INCREMENT ,
 `id_input` BIGINT NOT NULL,
@@ -44,7 +44,7 @@ $install_sql[]="CREATE TABLE `%INPUT_VALUES%` (
 `caption` VARCHAR( 250 ) NOT NULL,
 PRIMARY KEY ( `id_value` ) ,
 INDEX ( `caption` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%FORMS_ORDERS%` (
 `id_order` BIGINT NOT NULL AUTO_INCREMENT ,
 `id_form` BIGINT NOT NULL,
@@ -56,7 +56,7 @@ $install_sql[]="CREATE TABLE `%FORMS_ORDERS%` (
 `fio` VARCHAR(50) NULL,
 `email` VARCHAR(50) NULL,
 PRIMARY KEY ( `id_order` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%ORDER_ANSWERS%` (
 `id_answer` BIGINT NOT NULL AUTO_INCREMENT ,
 `id_order` BIGINT NOT NULL,
@@ -68,5 +68,5 @@ $install_sql[]="CREATE TABLE `%ORDER_ANSWERS%` (
 `forwardtext` LONGTEXT NULL,
 `forward_date` DATE NULL ,
 PRIMARY KEY ( `id_answer` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 ?>

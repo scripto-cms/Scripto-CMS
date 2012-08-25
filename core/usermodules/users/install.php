@@ -22,7 +22,7 @@ $install_sql[]="CREATE TABLE `%USERS%` (
 `access` LONGTEXT NULL default '',
 `id_group` INT NOT NULL default 0 ,
 PRIMARY KEY ( `id_user` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 /*
 Получаем идентификатор главного раздела
 */
@@ -64,7 +64,7 @@ $install_sql[]="CREATE TABLE `%GROUPS%` (
 `caption` VARCHAR( 250 ) NULL ,
 `percent` INT NOT NULL default 0,
 PRIMARY KEY ( `id_group` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 
 $install_sql[]="INSERT INTO `%static_modules%` values('users',0)";
 $install_sql[]="insert into `%block_types%` values (null,'Форма авторизации','users','users',0);";

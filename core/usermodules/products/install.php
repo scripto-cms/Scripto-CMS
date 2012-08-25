@@ -28,7 +28,7 @@ $install_sql[]="CREATE TABLE `%PRODUCTS%` (
 `meta` LONGTEXT,
 `keywords` LONGTEXT,
 PRIMARY KEY ( `id_product` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE INDEX products_id_category USING BTREE ON `%PRODUCTS%` (id_category);";
 $install_sql[]="CREATE INDEX products_id_product USING BTREE ON `%PRODUCTS%` (id_product);";
 $install_sql[]="CREATE INDEX products_id_firm USING BTREE ON `%PRODUCTS%` (id_firm);";
@@ -43,7 +43,7 @@ $install_sql[]="CREATE TABLE `%PRODUCT_PICTURES%` (
 `sort` MEDIUMINT NOT NULL,
 INDEX( `id_product` ) ,
 INDEX( `id_image` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE INDEX product_pictures_id_image USING BTREE ON `%PRODUCT_PICTURES%` (id_image);";
 $install_sql[]="CREATE INDEX product_pictures_id_product USING BTREE ON `%PRODUCT_PICTURES%` (id_product);";
 $install_sql[]="CREATE TABLE `%BLOCK_PRODUCTS%` (
@@ -51,7 +51,7 @@ $install_sql[]="CREATE TABLE `%BLOCK_PRODUCTS%` (
 `id_block` BIGINT NOT NULL,
 INDEX( `id_product` ),
 INDEX( `id_block` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%ACTIONS%` (
 `id_action` BIGINT NOT NULL  AUTO_INCREMENT ,
 `id_category` BIGINT NOT NULL ,
@@ -59,26 +59,26 @@ $install_sql[]="CREATE TABLE `%ACTIONS%` (
 `content` LONGTEXT,
 PRIMARY KEY ( `id_action` ),
 INDEX( `id_category` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%ACTION_PRODUCTS%` (
 `id_action` BIGINT NOT NULL ,
 `id_product` BIGINT NOT NULL ,
 INDEX( `id_action` ),
 INDEX( `id_product` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%BLOCK_ACTIONS%` (
 `id_action` BIGINT NOT NULL ,
 `id_block` BIGINT NOT NULL,
 INDEX( `id_action` ),
 INDEX( `id_block` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE INDEX product_block_id_block USING BTREE ON `%BLOCK_PRODUCTS%` (id_block);";
 $install_sql[]="CREATE TABLE `%PRODUCT_PRODUCTS%` (
 `id_product` BIGINT NOT NULL ,
 `id_product2` BIGINT NOT NULL,
 INDEX( `id_product` ),
 INDEX( `id_product2` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%PRODUCT_VARIANTS%` (
 `id_variant` BIGINT NOT NULL AUTO_INCREMENT ,
 `id_product` BIGINT NOT NULL,
@@ -86,13 +86,13 @@ $install_sql[]="CREATE TABLE `%PRODUCT_VARIANTS%` (
 `content` LONGBLOB,
 PRIMARY KEY ( `id_variant` ) ,
 INDEX ( `caption` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE INDEX product_variants_id_product USING BTREE ON `%PRODUCT_VARIANTS%` (id_variant);";
 $install_sql[]="CREATE TABLE `%PRODUCT_TYPES%` (
 `id_type` BIGINT NOT NULL AUTO_INCREMENT ,
 `caption` VARCHAR( 250 ) NOT NULL ,
 PRIMARY KEY ( `id_type` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%PRODUCT_OPTIONS%` (
 `id_option` BIGINT NOT NULL AUTO_INCREMENT ,
 `id_type` BIGINT NOT NULL ,
@@ -100,19 +100,19 @@ $install_sql[]="CREATE TABLE `%PRODUCT_OPTIONS%` (
 `values` LONGTEXT NOT NULL ,
 `show_in_order` INT NOT NULL default 0,
 PRIMARY KEY ( `id_option` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%FIRMS%` (
 `id_firm` BIGINT NOT NULL AUTO_INCREMENT,
 `caption` VARCHAR( 250 ) NOT NULL,
 `description` LONGTEXT NOT NULL,
 PRIMARY KEY ( `id_firm` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%COLLECTIONS%` (
 `id_collection` BIGINT NOT NULL AUTO_INCREMENT,
 `id_firm` BIGINT NOT NULL ,
 `caption` VARCHAR( 250 ) NOT NULL,
 PRIMARY KEY ( `id_collection` )
-) type=MyISAM;";
+) ENGINE=MyISAM;";
 
 /*
 Получаем идентификатор главного раздела

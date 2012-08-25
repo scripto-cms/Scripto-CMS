@@ -20,7 +20,7 @@ $install_sql[]="CREATE TABLE `%VOTERS%` (
 `date_add` datetime,
 `current` int,
 PRIMARY KEY (`id_vote`)
-);";
+) ENGINE=MyISAM;";
 $install_sql[]="CREATE TABLE `%VOTERS_IP%` (
 `id_vote` BIGINT ,
 `ip` VARCHAR(255) not null default '',
